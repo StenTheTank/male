@@ -65,4 +65,8 @@ public class Vanker extends Nupp{
     public String toString() {
         return varv + "Va";
     }
+
+    public boolean isOn_liigutatud() {
+        return on_liigutatud;
+    }
 }

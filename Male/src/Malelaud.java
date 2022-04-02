@@ -115,4 +115,7 @@ public class Malelaud {
                 "laud=" + Arrays.deepToString(laud) +
                 '}';
     }
+    public Object clone()throws CloneNotSupportedException{
+        return super.clone();
+    }
 }

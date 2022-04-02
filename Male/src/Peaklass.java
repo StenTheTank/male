@@ -4,7 +4,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Peaklass {
-<<<<<<< HEAD
     public static ArrayList<int[]> legaalsus_filter(ArrayList<int[]>kaigud,int[]asukoht,Malelaud praegune_malelaud,boolean valge_kaik) throws CloneNotSupportedException {
         ArrayList<int[]>legaalsed_kaigud=new ArrayList<>();
         Malelaud voimalik=(Malelaud) praegune_malelaud.clone();
@@ -74,26 +73,19 @@ public class Peaklass {
         }
         return true;
     }
-=======
     private static int käiguarv = 1;
 
     public static int getKäiguarv() {
         return käiguarv;
     }
-
->>>>>>> 817b941d7348642b0c965ac6949acb69083ba159
     public static void main(String[] args) {
         boolean valge_kaik=true;
         Malelaud laud = new Malelaud();
         laud.väljasta();
-<<<<<<< HEAD
-=======
         System.out.println(Arrays.deepToString(laud.getLaud()[0][0].kaigud(laud).toArray()));
         System.out.println(laud.getLaud()[1][0].getClass() == Ettur.class);
         /*while(){
-
             käiguarv++;
         }*/
->>>>>>> 817b941d7348642b0c965ac6949acb69083ba159
     }
 }

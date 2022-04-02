@@ -3,21 +3,15 @@ import java.util.Arrays;
 
 public class Kuningas extends Nupp{
     private boolean on_liigutatud;
-<<<<<<< HEAD
     @Override
     public void setAsukoht(int[] asukoht) {
         super.setAsukoht(asukoht);
         on_liigutatud = true;
     }
-=======
-
->>>>>>> 817b941d7348642b0c965ac6949acb69083ba159
     public Kuningas(char varv, int[] asukoht) {
         this.varv = varv;
         this.asukoht = asukoht;
     }
-
-<<<<<<< HEAD
     public boolean abikuningas(int rida,int veerg, Malelaud malelaud){
         if (rida<0 || veerg<0 ) return false;
         if (rida>7 || veerg > 7) return false;
@@ -25,14 +19,6 @@ public class Kuningas extends Nupp{
         else if (malelaud.getLaud()[rida][veerg].getVarv() != varv) return true;
         return false;
     }
-=======
-    @Override
-    public void setAsukoht(int[] asukoht) {
-        super.setAsukoht(asukoht);
-        on_liigutatud = true;
-    }
-
->>>>>>> 817b941d7348642b0c965ac6949acb69083ba159
     @Override
     public ArrayList<int[]> kaigud(Malelaud malelaud) {
         ArrayList<int[]> tulemus = vangerdus(malelaud);
