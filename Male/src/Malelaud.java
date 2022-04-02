@@ -55,7 +55,9 @@ public class Malelaud {
     }
 
     public void liiguta(int[] asukoht, int[] sihtasukoht){
-
+        laud[sihtasukoht[0]][sihtasukoht[1]] = laud[asukoht[0]][asukoht[1]];
+        laud[asukoht[0]][asukoht[1]] = null;
+        laud[sihtasukoht[0]][sihtasukoht[1]].setAsukoht(new int[]{sihtasukoht[0], sihtasukoht[1]});
     }
 
     public void väljasta(){
@@ -80,6 +82,16 @@ public class Malelaud {
                 tulemus += "*** ";
         }
         return tulemus;
+    }
+
+    public void ettur_muutub(String uus, Ettur ettur){
+        Nupp malend = switch (uus) {
+            case "Lipp" -> new Lipp(ettur.varv, ettur.asukoht);
+            case "Ratsu" -> new Ratsu(ettur.varv, ettur.asukoht);
+            case "Oda" -> new Oda(ettur.varv, ettur.asukoht);
+            default -> new Vanker(ettur.varv, ettur.asukoht);
+        };
+        laud[ettur.getAsukoht()[0]][ettur.getAsukoht()[1]] = malend;
     }
 
     @Override

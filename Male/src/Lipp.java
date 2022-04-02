@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Lipp extends Nupp{
 
@@ -11,8 +12,13 @@ public class Lipp extends Nupp{
 
     @Override
     public ArrayList<int[]> kaigud(Malelaud malelaud) {
+        Oda abi_oda = new Oda(varv, asukoht);
+        Vanker abi_vanker = new Vanker(varv, asukoht);
 
-        return null;
+        ArrayList<int[]> tulemus = new ArrayList<>(abi_oda.kaigud(malelaud));
+        tulemus.addAll(abi_vanker.kaigud(malelaud));
+
+        return tulemus;
     }
 
     @Override
