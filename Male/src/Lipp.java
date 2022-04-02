@@ -12,6 +12,7 @@ public class Lipp extends Nupp{
 
     @Override
     public ArrayList<int[]> kaigud(Malelaud malelaud) {
+
         Oda abi_oda = new Oda(varv, asukoht);
         Vanker abi_vanker = new Vanker(varv, asukoht);
 
