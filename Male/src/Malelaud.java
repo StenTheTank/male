@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Malelaud {
+public class Malelaud implements Cloneable{
     private Nupp[][] laud;
     private final char[] tahestik={'a','b','c','d','e','f','g','h'};
 
@@ -55,6 +55,9 @@ public class Malelaud {
     }
 
     public void liiguta(int[] asukoht, int[] sihtasukoht){
+        if (laud[asukoht[0]][asukoht[1]]==null){
+            return;
+        }
         //en passanti if
         if (laud[asukoht[0]][asukoht[1]].getClass() == Ettur.class){
             if (laud[asukoht[0]][asukoht[1]].getVarv() == 'v'){
@@ -115,7 +118,8 @@ public class Malelaud {
                 "laud=" + Arrays.deepToString(laud) +
                 '}';
     }
-    public Object clone()throws CloneNotSupportedException{
+    public Object clone() throws CloneNotSupportedException
+    {
         return super.clone();
     }
 }

@@ -44,15 +44,21 @@ public class Kuningas extends Nupp{
         ArrayList<int[]>vastus=new ArrayList<>();
         if (varv=='v') valge_kaik=true;
         else valge_kaik=false;
-        ArrayList<int[]>v_kaigud=vastasekaigud(laud,valge_kaik);
-        if (!on_liigutatud && !v1.isOn_liigutatud()){
-            if (!(v_kaigud.contains(new int[]{asukoht[0],5}) || v_kaigud.contains(new int[]{asukoht[0],4}))){
-                vastus.add(new int[]{asukoht[0],6});
+        ArrayList<int[]>v_kaigud;
+        if (laud.getLaud()[asukoht[0]][6]==null && laud.getLaud()[asukoht[0]][7]==null) {
+            if (!on_liigutatud && !v1.isOn_liigutatud()) {
+                v_kaigud=vastasekaigud(laud,valge_kaik);
+                if (!(v_kaigud.contains(new int[]{asukoht[0], 5}) || v_kaigud.contains(new int[]{asukoht[0], 4}))) {
+                    vastus.add(new int[]{asukoht[0], 6});
+                }
             }
         }
-        if (!on_liigutatud && !v2.isOn_liigutatud()){
-            if (!(v_kaigud.contains(new int[]{asukoht[0],3}) || v_kaigud.contains(new int[]{asukoht[0],4}))){
-                vastus.add(new int[]{asukoht[0],2});
+        if (laud.getLaud()[asukoht[0]][1]==null && laud.getLaud()[asukoht[0]][2]==null && laud.getLaud()[asukoht[0]][3]==null) {
+            if (!on_liigutatud && !v2.isOn_liigutatud()) {
+                v_kaigud=vastasekaigud(laud,valge_kaik);
+                if (!(v_kaigud.contains(new int[]{asukoht[0], 3}) || v_kaigud.contains(new int[]{asukoht[0], 4}))) {
+                    vastus.add(new int[]{asukoht[0], 2});
+                }
             }
         }
         return vastus;
