@@ -2,10 +2,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Vanker extends Nupp{
+    private boolean on_liigutatud;
 
     public Vanker(char varv, int[] asukoht) {
         this.varv = varv;
         this.asukoht=asukoht;
+    }
+
+    @Override
+    public void setAsukoht(int[] asukoht) {
+        super.setAsukoht(asukoht);
+        on_liigutatud = true;
     }
 
     @Override
@@ -42,7 +49,7 @@ public class Vanker extends Nupp{
             else break;
         }
 
-        //Üles
+        //Alla
         for (int i = asukoht[0] - 1 ; i > -1; i--) {
             if (malelaud.getLaud()[i][asukoht[1]] == null) tulemus.add(new int[]{i, asukoht[1]});
             else if (malelaud.getLaud()[i][asukoht[1]].getVarv() != varv) {
@@ -51,7 +58,6 @@ public class Vanker extends Nupp{
             }
             else break;
         }
-
         return tulemus;
     }
 

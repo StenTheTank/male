@@ -55,7 +55,24 @@ public class Malelaud {
     }
 
     public void liiguta(int[] asukoht, int[] sihtasukoht){
+        //en passanti if
+        if (laud[asukoht[0]][asukoht[1]].getClass() == Ettur.class){
+            if (laud[asukoht[0]][asukoht[1]].getVarv() == 'v'){
+                if (laud[asukoht[0]][asukoht[1]].kaigud(this).contains(new int[]{sihtasukoht[0], sihtasukoht[1], 1}))
+                    laud[sihtasukoht[0]-1][sihtasukoht[1]] = null;
+            }
+            else if (laud[asukoht[0]][asukoht[1]].getVarv() == 'm'){
+                if (laud[asukoht[0]][asukoht[1]].kaigud(this).contains(new int[]{sihtasukoht[0], sihtasukoht[1], 1}))
+                    laud[sihtasukoht[0]+1][sihtasukoht[1]] = null;
+            }
+        }
 
+        laud[sihtasukoht[0]][sihtasukoht[1]] = laud[asukoht[0]][asukoht[1]];
+        laud[asukoht[0]][asukoht[1]] = null;
+        if (laud[sihtasukoht[0]][sihtasukoht[1]].getClass() == Ettur.class && (sihtasukoht[0]-asukoht[0] == 2 || sihtasukoht[0]-asukoht[0] == -2))
+            laud[sihtasukoht[0]][sihtasukoht[1]].setAsukoht(new int[]{sihtasukoht[0], sihtasukoht[1]}, true);
+        else
+            laud[sihtasukoht[0]][sihtasukoht[1]].setAsukoht(new int[]{sihtasukoht[0], sihtasukoht[1]});
     }
 
     public void väljasta(){
@@ -80,6 +97,16 @@ public class Malelaud {
                 tulemus += "*** ";
         }
         return tulemus;
+    }
+
+    public void ettur_muutub(String uus, Ettur ettur){
+        Nupp malend = switch (uus) {
+            case "Lipp" -> new Lipp(ettur.varv, ettur.asukoht);
+            case "Ratsu" -> new Ratsu(ettur.varv, ettur.asukoht);
+            case "Oda" -> new Oda(ettur.varv, ettur.asukoht);
+            default -> new Vanker(ettur.varv, ettur.asukoht);
+        };
+        laud[ettur.getAsukoht()[0]][ettur.getAsukoht()[1]] = malend;
     }
 
     @Override
