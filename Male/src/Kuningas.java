@@ -1,40 +1,22 @@
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.Arrays;
 
-public class Kuningas implements Nupp{
-    private String varv;
-    private String asukoht;
-    public Kuningas(String varv,String asukoht) {
+public class Kuningas extends Nupp{
+
+    public Kuningas(char varv, int[] asukoht) {
         this.varv = varv;
         this.asukoht=asukoht;
     }
-    public void kaigud(String asukoht){
-        List<String>vastus=new ArrayList<>();
-        if (Objects.equals(varv, "v") && asukoht.endsWith("2")){
-            //alguskaigud
-
-        }
-        else{
-            //muudkaigud
-        }
-    }
-
-    public String getVarv() {
-        return varv;
-    }
 
 
-    public String getAsukoht() {
-        return asukoht;
-    }
+    @Override
+    public ArrayList<int[]> kaigud(Malelaud malelaud) {
 
-    public void setAsukoht(String asukoht) {
-        this.asukoht = asukoht;
+        return null;
     }
 
     @Override
     public String toString() {
-        return varv+" Kuningas";
+        return varv + "Ku";
     }
 }
