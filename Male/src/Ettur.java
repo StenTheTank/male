@@ -1,13 +1,14 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Ettur extends Nupp{
     private boolean on_liigutatud;
+    private int käidud;
 
     public Ettur(char varv, int[] asukoht) {
         this.varv = varv;
         this.asukoht = asukoht;
         on_liigutatud = false;
+        käidud = 0;
     }
 
     @Override
@@ -17,21 +18,62 @@ public class Ettur extends Nupp{
     }
 
     @Override
+    public void setAsukoht(int[] asukoht, boolean ettur_kaks_sammu) {
+        super.setAsukoht(asukoht);
+        on_liigutatud = true;
+        käidud = Peaklass.getKäiguarv();
+    }
+
+    public int getKäidud() {
+        return käidud;
+    }
+
+    @Override
     public ArrayList<int[]> kaigud(Malelaud malelaud) {
         ArrayList<int[]> tulemus = new ArrayList<>();
         if (varv == 'v'){
             if (ett_saab_käia(malelaud, asukoht[0]+1, asukoht[1])) tulemus.add(new int[]{asukoht[0]+1, asukoht[1]});
-            if (!on_liigutatud && ett_saab_käia(malelaud, asukoht[0]+2, asukoht[1])) tulemus.add(new int[]{asukoht[0]+2, asukoht[1]});
+            if (!on_liigutatud && ett_saab_käia(malelaud, asukoht[0]+2, asukoht[1]) && ett_saab_käia(malelaud, asukoht[0]+1, asukoht[1])) tulemus.add(new int[]{asukoht[0]+2, asukoht[1]});
             if (ett_saab_süüa(malelaud, asukoht[0]+1, asukoht[1]+1)) tulemus.add(new int[]{asukoht[0]+1, asukoht[1]+1});
             if (ett_saab_süüa(malelaud, asukoht[0]+1, asukoht[1]-1)) tulemus.add(new int[]{asukoht[0]+1, asukoht[1]-1});
+            //En passant
+            if (asukoht[0] == 4 && ett_saab_süüa(malelaud, asukoht[0], asukoht[1]+1) && malelaud.getLaud()[asukoht[0]][asukoht[1]+1].getClass() == Ettur.class){
+                Ettur söödav = (Ettur) malelaud.getLaud()[asukoht[0]][asukoht[1]+1];
+                if (söödav.getKäidud() + 1 == Peaklass.getKäiguarv()){
+                    tulemus.add(new int[]{asukoht[0]+1, asukoht[1]+1});
+                    tulemus.add(new int[]{asukoht[0]+1, asukoht[1]+1, 1});
+                }
+            }
+            if (asukoht[0] == 4 && ett_saab_süüa(malelaud, asukoht[0], asukoht[1]-1) && malelaud.getLaud()[asukoht[0]][asukoht[1]+-1].getClass() == Ettur.class){
+                Ettur söödav = (Ettur) malelaud.getLaud()[asukoht[0]][asukoht[1]-1];
+                if (söödav.getKäidud() + 1 == Peaklass.getKäiguarv()){
+                    tulemus.add(new int[]{asukoht[0]+1, asukoht[1]-1});
+                    tulemus.add(new int[]{asukoht[0]+1, asukoht[1]-1, 1});
+                }
+            }
+
         }
         else{
             if (ett_saab_käia(malelaud, asukoht[0]-1, asukoht[1])) tulemus.add(new int[]{asukoht[0]-1, asukoht[1]});
-            if (!on_liigutatud && ett_saab_käia(malelaud, asukoht[0]-2, asukoht[1])) tulemus.add(new int[]{asukoht[0]-2, asukoht[1]});
+            if (!on_liigutatud && ett_saab_käia(malelaud, asukoht[0]-2, asukoht[1]) && ett_saab_käia(malelaud, asukoht[0]-1, asukoht[1])) tulemus.add(new int[]{asukoht[0]-2, asukoht[1]});
             if (ett_saab_süüa(malelaud, asukoht[0]-1, asukoht[1]+1)) tulemus.add(new int[]{asukoht[0]-1, asukoht[1]+1});
             if (ett_saab_süüa(malelaud, asukoht[0]-1, asukoht[1]-1)) tulemus.add(new int[]{asukoht[0]-1, asukoht[1]-1});
+            //En passant
+            if (asukoht[0] == 3 && ett_saab_süüa(malelaud, asukoht[0], asukoht[1]+1) && malelaud.getLaud()[asukoht[0]][asukoht[1]+1].getClass() == Ettur.class){
+                Ettur söödav = (Ettur) malelaud.getLaud()[asukoht[0]][asukoht[1]+1];
+                if (söödav.getKäidud() + 1 == Peaklass.getKäiguarv()){
+                    tulemus.add(new int[]{asukoht[0]-1, asukoht[1]+1});
+                    tulemus.add(new int[]{asukoht[0]-1, asukoht[1]+1, 1});
+                }
+            }
+            if (asukoht[0] == 3 && ett_saab_süüa(malelaud, asukoht[0], asukoht[1]-1) && malelaud.getLaud()[asukoht[0]][asukoht[1]+-1].getClass() == Ettur.class){
+                Ettur söödav = (Ettur) malelaud.getLaud()[asukoht[0]][asukoht[1]-1];
+                if (söödav.getKäidud() + 1 == Peaklass.getKäiguarv()){
+                    tulemus.add(new int[]{asukoht[0]-1, asukoht[1]-1});
+                    tulemus.add(new int[]{asukoht[0]-1, asukoht[1]-1, 1});
+                }
+            }
         }
-
         return tulemus;
     }
 
@@ -46,4 +88,5 @@ public class Ettur extends Nupp{
     public String toString() {
         return varv + "Et";
     }
+
 }

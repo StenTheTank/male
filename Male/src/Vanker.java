@@ -49,7 +49,7 @@ public class Vanker extends Nupp{
             else break;
         }
 
-        //Üles
+        //Alla
         for (int i = asukoht[0] - 1 ; i > -1; i--) {
             if (malelaud.getLaud()[i][asukoht[1]] == null) tulemus.add(new int[]{i, asukoht[1]});
             else if (malelaud.getLaud()[i][asukoht[1]].getVarv() != varv) {

@@ -9,7 +9,8 @@ public class Ratsu extends Nupp{
     }
 
     public boolean abiratsu(int rida,int veerg, Malelaud malelaud){
-        if (malelaud.getLaud()[rida][veerg]==null) return true;
+        if (rida < 0 || rida > 7 || veerg < 0 || veerg > 7) return false;
+        else if (malelaud.getLaud()[rida][veerg]==null) return true;
         else if (malelaud.getLaud()[rida][veerg].getVarv() != varv) return true;
         return false;
     }
