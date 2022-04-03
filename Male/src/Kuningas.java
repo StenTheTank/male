@@ -37,6 +37,12 @@ public class Kuningas extends Nupp{
 
         return tulemus;
     }
+    public static boolean sisaldub(ArrayList<int[]>hulk,int[]element){
+        for (int[] ints : hulk) {
+            if(Arrays.toString(ints).equals(Arrays.toString(element))) return true;
+        }
+        return false;
+    }
     public ArrayList<int[]> vangerdus(Malelaud laud){
         Vanker v1=(Vanker) laud.getLaud()[asukoht[0]][7];
         Vanker v2=(Vanker) laud.getLaud()[asukoht[0]][0];
@@ -48,7 +54,7 @@ public class Kuningas extends Nupp{
         if (laud.getLaud()[asukoht[0]][6]==null && laud.getLaud()[asukoht[0]][7]==null) {
             if (!on_liigutatud && !v1.isOn_liigutatud()) {
                 v_kaigud=vastasekaigud(laud,valge_kaik);
-                if (!(v_kaigud.contains(new int[]{asukoht[0], 5}) || v_kaigud.contains(new int[]{asukoht[0], 4}))) {
+                if (!(sisaldub(v_kaigud,new int[]{asukoht[0], 5}) || sisaldub(v_kaigud,new int[]{asukoht[0], 4}))) {
                     vastus.add(new int[]{asukoht[0], 6});
                 }
             }
@@ -56,7 +62,7 @@ public class Kuningas extends Nupp{
         if (laud.getLaud()[asukoht[0]][1]==null && laud.getLaud()[asukoht[0]][2]==null && laud.getLaud()[asukoht[0]][3]==null) {
             if (!on_liigutatud && !v2.isOn_liigutatud()) {
                 v_kaigud=vastasekaigud(laud,valge_kaik);
-                if (!(v_kaigud.contains(new int[]{asukoht[0], 3}) || v_kaigud.contains(new int[]{asukoht[0], 4}))) {
+                if (!(sisaldub(v_kaigud,new int[]{asukoht[0], 3}) || sisaldub(v_kaigud,new int[]{asukoht[0], 4}))) {
                     vastus.add(new int[]{asukoht[0], 2});
                 }
             }
