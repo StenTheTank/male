@@ -31,9 +31,6 @@ public class Kuningas extends Nupp{
         if (abikuningas(rida-1,veerg-1,malelaud)) tulemus.add(new int[]{rida-1,veerg-1});
         if (abikuningas(rida-1,veerg,malelaud)) tulemus.add(new int[]{rida-1,veerg});
         if (abikuningas(rida-1,veerg+1,malelaud)) tulemus.add(new int[]{rida-1,veerg+1});
-        if (vangerdus(malelaud).size()>0){
-
-        }
 
         return tulemus;
     }
@@ -51,7 +48,7 @@ public class Kuningas extends Nupp{
         if (varv=='v') valge_kaik=true;
         else valge_kaik=false;
         ArrayList<int[]>v_kaigud;
-        if (laud.getLaud()[asukoht[0]][6]==null && laud.getLaud()[asukoht[0]][7]==null) {
+        if (laud.getLaud()[asukoht[0]][5]==null && laud.getLaud()[asukoht[0]][6]==null) {
             if (!on_liigutatud && !v1.isOn_liigutatud()) {
                 v_kaigud=vastasekaigud(laud,valge_kaik);
                 if (!(sisaldub(v_kaigud,new int[]{asukoht[0], 5}) || sisaldub(v_kaigud,new int[]{asukoht[0], 4}))) {
@@ -74,18 +71,20 @@ public class Kuningas extends Nupp{
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (laud.getLaud()[i][j]!=null) {
-                    if (valge_kaik) {
-                        if (laud.getLaud()[i][j].getVarv() == 'v') {
-                            ArrayList<int[]> ajutine = laud.getLaud()[i][j].kaigud(laud);
-                            for (int[] kaik : ajutine) {
-                                vastus.add(kaik);
+                    if (laud.getLaud()[i][j].getClass() != Kuningas.class) {
+                        if (valge_kaik) {
+                            if (laud.getLaud()[i][j].getVarv() == 'm') {
+                                ArrayList<int[]> ajutine = laud.getLaud()[i][j].kaigud(laud);
+                                for (int[] kaik : ajutine) {
+                                    vastus.add(kaik);
+                                }
                             }
-                        }
-                    } else {
-                        if (laud.getLaud()[i][j].getVarv() == 'm') {
-                            ArrayList<int[]> ajutine = laud.getLaud()[i][j].kaigud(laud);
-                            for (int[] kaik : ajutine) {
-                                vastus.add(kaik);
+                        } else {
+                            if (laud.getLaud()[i][j].getVarv() == 'v') {
+                                ArrayList<int[]> ajutine = laud.getLaud()[i][j].kaigud(laud);
+                                for (int[] kaik : ajutine) {
+                                    vastus.add(kaik);
+                                }
                             }
                         }
                     }

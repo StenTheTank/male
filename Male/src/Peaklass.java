@@ -113,9 +113,10 @@ public class Peaklass {
         int[]kaik_int1;
         int[]kaik_int2;
         Nupp vaadeldavnupp;
-        ArrayList<int[]>legaalsed_kaigud=new ArrayList<>();
+        ArrayList<int[]>legaalsed_kaigud;
         while(mang_kaib){
             if (valge_kaik){
+                System.out.println("Valge Käik");
                 kaik_string=sc.nextLine();
                 kaik_int1=dekodeeri_kaik(kaik_string);
                 vaadeldavnupp=laud.getLaud()[kaik_int1[0]][kaik_int1[1]];
@@ -128,9 +129,36 @@ public class Peaklass {
                         kaik_string=sc.nextLine();
                         kaik_int2=dekodeeri_kaik(kaik_string);
                         if (sisaldub(legaalsed_kaigud,kaik_int2)){
-                            System.out.println("jõudsin siia kuidagi");
-                            laud.liiguta(kaik_int1,kaik_int1);
+                            laud.liiguta(kaik_int1,kaik_int2);
                             laud.väljasta();
+                            valge_kaik=false;
+                        }
+                        else {
+                            System.out.println("pole legaalne kaik");
+                            laud.väljasta();
+                        }
+                    }
+                }
+                else {System.out.println("nuppu pole");laud.väljasta();}
+
+            }
+            else{
+                System.out.println("Musta käik");
+                kaik_string=sc.nextLine();
+                kaik_int1=dekodeeri_kaik(kaik_string);
+                vaadeldavnupp=laud.getLaud()[kaik_int1[0]][kaik_int1[1]];
+                if (vaadeldavnupp!=null) {
+                    if (vaadeldavnupp.getVarv() == 'm') {
+                        legaalsed_kaigud=legaalsus_filter(vaadeldavnupp.kaigud(laud),kaik_int1,laud,valge_kaik);
+                        for (int[] ints : legaalsed_kaigud) {
+                            System.out.println(kodeeri_kaik(ints));
+                        }
+                        kaik_string=sc.nextLine();
+                        kaik_int2=dekodeeri_kaik(kaik_string);
+                        if (sisaldub(legaalsed_kaigud,kaik_int2)){
+                            laud.liiguta(kaik_int1,kaik_int2);
+                            laud.väljasta();
+                            valge_kaik=true;
                         }
                         else {
                             System.out.println("pole legaalne kaik");
