@@ -14,6 +14,11 @@ public class Peaklass {
             }
 
         }
+        for (int i = 0; i <8 ; i++) {
+            for (int j = 0; j <8 ; j++) {
+                if (praegune_malelaud.getLaud()[i][j]!=null)praegune_malelaud.getLaud()[i][j].setAsukoht(new int[]{i,j});
+            }
+        }
         return legaalsed_kaigud;
     }
     public static ArrayList<int[]>vastasekaigud(Malelaud laud,boolean valge_kaik){
@@ -101,7 +106,7 @@ public class Peaklass {
         }
         return false;
     }
-    public static void main(String[] args) throws CloneNotSupportedException {
+    public static void main(String[] args){
         boolean valge_kaik=true;
         Malelaud laud = new Malelaud();
         laud.väljasta();

@@ -14,7 +14,7 @@ public class Ettur extends Nupp{
     @Override
     public void setAsukoht(int[] asukoht) {
         super.setAsukoht(asukoht);
-        on_liigutatud = true;
+        //on_liigutatud = true;
     }
 
     @Override

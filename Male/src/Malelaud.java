@@ -67,6 +67,16 @@ public class Malelaud{
         if (laud[asukoht[0]][asukoht[1]]==null){
             return;
         }
+        if (laud[asukoht[0]][asukoht[1]].getClass() == Kuningas.class){
+            Kuningas kunn=(Kuningas)(laud[asukoht[0]][asukoht[1]]);
+            kunn.setOn_liigutatud(true);
+            if (asukoht[1]==4 && sihtasukoht[1]==6){
+                liiguta(new int[]{asukoht[0],7},new int[]{asukoht[0],5});
+            }
+            if (asukoht[1]==4 && sihtasukoht[1]==2){
+                liiguta(new int[]{asukoht[0],0},new int[]{asukoht[0],3});
+            }
+        }
         //en passanti if
         if (laud[asukoht[0]][asukoht[1]].getClass() == Ettur.class){
             if (laud[asukoht[0]][asukoht[1]].getVarv() == 'v'){
