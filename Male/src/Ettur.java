@@ -4,17 +4,21 @@ public class Ettur extends Nupp{
     private boolean on_liigutatud;
     private int käidud;
 
-    public Ettur(char varv, int[] asukoht) {
+    public Ettur(char varv, int[] asukoht,boolean on_liigutatud) {
         this.varv = varv;
         this.asukoht = asukoht;
-        on_liigutatud = false;
+        this.on_liigutatud = on_liigutatud;
         käidud = 0;
     }
 
     @Override
     public void setAsukoht(int[] asukoht) {
         super.setAsukoht(asukoht);
-        //on_liigutatud = true;
+        on_liigutatud = true;
+    }
+
+    public boolean isOn_liigutatud() {
+        return on_liigutatud;
     }
 
     @Override

@@ -6,18 +6,16 @@ import java.util.Scanner;
 public class Peaklass {
     public static ArrayList<int[]> legaalsus_filter(ArrayList<int[]>kaigud,int[]asukoht,Malelaud praegune_malelaud,boolean valge_kaik){
         ArrayList<int[]>legaalsed_kaigud=new ArrayList<>();
-        Malelaud voimalik= new Malelaud(praegune_malelaud);
+        Malelaud voimalik;
+        boolean vanker_liikus=false;
+        boolean kunn_liikus=false;
         for (int[] kaik : kaigud) {
+            voimalik= new Malelaud(praegune_malelaud);
             voimalik.liiguta(asukoht,kaik);
             if (legaalne(valge_kaik,voimalik)){
                 legaalsed_kaigud.add(kaik);
             }
 
-        }
-        for (int i = 0; i <8 ; i++) {
-            for (int j = 0; j <8 ; j++) {
-                if (praegune_malelaud.getLaud()[i][j]!=null)praegune_malelaud.getLaud()[i][j].setAsukoht(new int[]{i,j});
-            }
         }
         return legaalsed_kaigud;
     }
@@ -33,7 +31,8 @@ public class Peaklass {
                                 vastus.add(kaik);
                             }
                         }
-                    } else {
+                    }
+                    else {
                         if (laud.getLaud()[i][j].getVarv() == 'v') {
                             ArrayList<int[]> ajutine = laud.getLaud()[i][j].kaigud(laud);
                             for (int[] kaik : ajutine) {

@@ -6,16 +6,15 @@ public class Kuningas extends Nupp{
     @Override
     public void setAsukoht(int[] asukoht) {
         super.setAsukoht(asukoht);
+        on_liigutatud=true;
     }
-
-    public void setOn_liigutatud(boolean on_liigutatud) {
-        this.on_liigutatud = on_liigutatud;
+    public boolean isOn_liigutatud() {
+        return on_liigutatud;
     }
-
-    public Kuningas(char varv, int[] asukoht) {
+    public Kuningas(char varv, int[] asukoht,boolean on_liigutatud) {
         this.varv = varv;
         this.asukoht = asukoht;
-        this.on_liigutatud=false;
+        this.on_liigutatud=on_liigutatud;
     }
     public boolean abikuningas(int rida,int veerg, Malelaud malelaud){
         if (rida<0 || veerg<0 ) return false;
@@ -26,7 +25,7 @@ public class Kuningas extends Nupp{
     }
     @Override
     public ArrayList<int[]> kaigud(Malelaud malelaud) {
-        ArrayList<int[]> tulemus = vangerdus(malelaud);
+        ArrayList<int[]> tulemus =vangerdus(malelaud);
         int rida=asukoht[0];int veerg=asukoht[1];
         if (abikuningas(rida+1,veerg-1,malelaud)) tulemus.add(new int[]{rida+1,veerg-1});
         if (abikuningas(rida+1,veerg,malelaud)) tulemus.add(new int[]{rida+1,veerg});
@@ -36,7 +35,6 @@ public class Kuningas extends Nupp{
         if (abikuningas(rida-1,veerg-1,malelaud)) tulemus.add(new int[]{rida-1,veerg-1});
         if (abikuningas(rida-1,veerg,malelaud)) tulemus.add(new int[]{rida-1,veerg});
         if (abikuningas(rida-1,veerg+1,malelaud)) tulemus.add(new int[]{rida-1,veerg+1});
-
         return tulemus;
     }
     public static boolean sisaldub(ArrayList<int[]>hulk,int[]element){
@@ -46,6 +44,9 @@ public class Kuningas extends Nupp{
         return false;
     }
     public ArrayList<int[]> vangerdus(Malelaud laud){
+        if (on_liigutatud){
+            return new ArrayList<>();
+        }
         Vanker v1=(Vanker) laud.getLaud()[asukoht[0]][7];
         Vanker v2=(Vanker) laud.getLaud()[asukoht[0]][0];
         boolean valge_kaik;
@@ -54,9 +55,7 @@ public class Kuningas extends Nupp{
         else valge_kaik=false;
         ArrayList<int[]>v_kaigud;
         if (laud.getLaud()[asukoht[0]][5]==null && laud.getLaud()[asukoht[0]][6]==null) {
-            System.out.println("parem tühi");
             if (!on_liigutatud && !v1.isOn_liigutatud()) {
-                System.out.println("pole liigutatud");
                 v_kaigud=vastasekaigud(laud,valge_kaik);
                 if (!(sisaldub(v_kaigud,new int[]{asukoht[0], 5}) || sisaldub(v_kaigud,new int[]{asukoht[0], 4}))) {
                     vastus.add(new int[]{asukoht[0], 6});
