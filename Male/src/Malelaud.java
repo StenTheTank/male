@@ -59,28 +59,28 @@ public class Malelaud{
             for (int j = 0; j < 8; j++) {
                 if(teinelaud.getLaud()[i][j]!=null){
                     if (teinelaud.getLaud()[i][j].getClass()==Ettur.class){
-                        Ettur et=(Ettur) teinelaud.getLaud()[i][j];
-                        this.laud[i][j]=new Ettur(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j},et.isOn_liigutatud());
+                        Ettur et = (Ettur) teinelaud.getLaud()[i][j];
+                        this.laud[i][j] = new Ettur(teinelaud.getLaud()[i][j].getVarv(), new int[]{i,j},et.isOn_liigutatud(), et.getKäidud());
                     }
                     if (teinelaud.getLaud()[i][j].getClass()==Ratsu.class){
-                        this.laud[i][j]=new Ratsu(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
+                        this.laud[i][j] = new Ratsu(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
 
                     }
                     if (teinelaud.getLaud()[i][j].getClass()==Oda.class){
-                        this.laud[i][j]=new Oda(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
+                        this.laud[i][j] = new Oda(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
 
                     }
                     if (teinelaud.getLaud()[i][j].getClass()==Lipp.class){
-                        this.laud[i][j]=new Lipp(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
+                        this.laud[i][j] = new Lipp(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
 
                     }
                     if (teinelaud.getLaud()[i][j].getClass()==Kuningas.class){
-                        Kuningas kunn=(Kuningas) teinelaud.getLaud()[i][j];
+                        Kuningas kunn = (Kuningas) teinelaud.getLaud()[i][j];
                         this.laud[i][j]=new Kuningas(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j},kunn.isOn_liigutatud());
 
                     }
                     if (teinelaud.getLaud()[i][j].getClass()==Vanker.class){
-                        this.laud[i][j]=new Vanker(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
+                        this.laud[i][j]=new Vanker(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j}); //TODO siin pole vaja vanker.on_liigutatud?
 
                     }
                 }
@@ -103,12 +103,12 @@ public class Malelaud{
         //en passanti if
         if (laud[asukoht[0]][asukoht[1]].getClass() == Ettur.class){
             if (laud[asukoht[0]][asukoht[1]].getVarv() == 'v'){
-                if (laud[asukoht[0]][asukoht[1]].kaigud(this).contains(new int[]{sihtasukoht[0], sihtasukoht[1], 1}))
-                    laud[sihtasukoht[0]-1][sihtasukoht[1]] = null;
+                if (Peaklass.sisaldub(laud[asukoht[0]][asukoht[1]].kaigud(this), (new int[]{sihtasukoht[0], sihtasukoht[1], 1})))
+                    laud[sihtasukoht[0]-1][sihtasukoht[1]] = null; //en passant võtab nupu ära
             }
             else if (laud[asukoht[0]][asukoht[1]].getVarv() == 'm'){
-                if (laud[asukoht[0]][asukoht[1]].kaigud(this).contains(new int[]{sihtasukoht[0], sihtasukoht[1], 1}))
-                    laud[sihtasukoht[0]+1][sihtasukoht[1]] = null;
+                if (Peaklass.sisaldub(laud[asukoht[0]][asukoht[1]].kaigud(this), (new int[]{sihtasukoht[0], sihtasukoht[1], 1})))
+                    laud[sihtasukoht[0]+1][sihtasukoht[1]] = null; //en passant võtab nupu ära
             }
         }
 

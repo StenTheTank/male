@@ -4,11 +4,17 @@ public class Ettur extends Nupp{
     private boolean on_liigutatud;
     private int käidud;
 
-    public Ettur(char varv, int[] asukoht,boolean on_liigutatud) {
+    public Ettur(char varv, int[] asukoht, boolean on_liigutatud) {
         this.varv = varv;
         this.asukoht = asukoht;
         this.on_liigutatud = on_liigutatud;
         käidud = 0;
+    }
+    public Ettur(char varv, int[] asukoht, boolean on_liigutatud, int käidud ) {
+        this.varv = varv;
+        this.asukoht = asukoht;
+        this.on_liigutatud = on_liigutatud;
+        this.käidud = käidud;
     }
 
     @Override
@@ -45,14 +51,14 @@ public class Ettur extends Nupp{
                 Ettur söödav = (Ettur) malelaud.getLaud()[asukoht[0]][asukoht[1]+1];
                 if (söödav.getKäidud() + 1 == Peaklass.getKäiguarv()){
                     tulemus.add(new int[]{asukoht[0]+1, asukoht[1]+1});
-                    tulemus.add(new int[]{asukoht[0]+1, asukoht[1]+1, 1});
+                    tulemus.add(new int[]{asukoht[0]+1, asukoht[1]+1, 1}); //kolmekohaline asukoht viitab, sellele, et en passant on võimalik
                 }
             }
             if (asukoht[0] == 4 && ett_saab_süüa(malelaud, asukoht[0], asukoht[1]-1) && malelaud.getLaud()[asukoht[0]][asukoht[1]+-1].getClass() == Ettur.class){
                 Ettur söödav = (Ettur) malelaud.getLaud()[asukoht[0]][asukoht[1]-1];
                 if (söödav.getKäidud() + 1 == Peaklass.getKäiguarv()){
                     tulemus.add(new int[]{asukoht[0]+1, asukoht[1]-1});
-                    tulemus.add(new int[]{asukoht[0]+1, asukoht[1]-1, 1});
+                    tulemus.add(new int[]{asukoht[0]+1, asukoht[1]-1, 1}); //kolmekohaline asukoht viitab, sellele, et en passant on võimalik
                 }
             }
 
@@ -67,14 +73,14 @@ public class Ettur extends Nupp{
                 Ettur söödav = (Ettur) malelaud.getLaud()[asukoht[0]][asukoht[1]+1];
                 if (söödav.getKäidud() + 1 == Peaklass.getKäiguarv()){
                     tulemus.add(new int[]{asukoht[0]-1, asukoht[1]+1});
-                    tulemus.add(new int[]{asukoht[0]-1, asukoht[1]+1, 1});
+                    tulemus.add(new int[]{asukoht[0]-1, asukoht[1]+1, 1});//kolmekohaline asukoht viitab, sellele, et en passant on võimalik
                 }
             }
             if (asukoht[0] == 3 && ett_saab_süüa(malelaud, asukoht[0], asukoht[1]-1) && malelaud.getLaud()[asukoht[0]][asukoht[1]+-1].getClass() == Ettur.class){
                 Ettur söödav = (Ettur) malelaud.getLaud()[asukoht[0]][asukoht[1]-1];
                 if (söödav.getKäidud() + 1 == Peaklass.getKäiguarv()){
                     tulemus.add(new int[]{asukoht[0]-1, asukoht[1]-1});
-                    tulemus.add(new int[]{asukoht[0]-1, asukoht[1]-1, 1});
+                    tulemus.add(new int[]{asukoht[0]-1, asukoht[1]-1, 1});//kolmekohaline asukoht viitab, sellele, et en passant on võimalik
                 }
             }
         }
