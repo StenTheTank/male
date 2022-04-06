@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Peaklass {
     private static final ArrayList<Character> tahestik_char = new ArrayList<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'));
     private static final ArrayList<Character> numbrid_char = new ArrayList<>(Arrays.asList('1', '2', '3', '4', '5', '6', '7', '8'));
-    private static int käiguarv = 1; 
+    private static int käiguarv = 1;
 
     public static int getKäiguarv() {
         return käiguarv;
@@ -28,11 +28,11 @@ public class Peaklass {
         }
         return legaalsed_kaigud;
     }
-    public static ArrayList<int[]> vastasekaigud(Malelaud laud,boolean valge_kaik){
+    public static ArrayList<int[]> vastasekaigud(Malelaud laud, boolean valge_kaik){
         ArrayList<int[]> vastus = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (laud.getLaud()[i][j]!=null) {
+                if (laud.getLaud()[i][j] != null) {
                     if (valge_kaik) {
                         if (laud.getLaud()[i][j].getVarv() == 'm') {
                             ArrayList<int[]> selle_nupu_käigud = laud.getLaud()[i][j].kaigud(laud);
@@ -57,12 +57,12 @@ public class Peaklass {
         int[]asukoht;
         for (Nupp[] nupps : nupud) {
             for (Nupp nupp : nupps) {
-                if (nupp!=null){
+                if (nupp != null){
                     if (valge_kaik) {
                         if (nupp.getClass() == Kuningas.class) {
                             if (nupp.getVarv() == 'v') {
                                 asukoht = nupp.getAsukoht();
-                                if (sisaldub(v_kaigud,asukoht)) {
+                                if (sisaldub(v_kaigud, asukoht)) {
                                     return false;
                                 }
                             }
@@ -72,7 +72,7 @@ public class Peaklass {
                         if (nupp.getClass() == Kuningas.class) {
                             if (nupp.getVarv() == 'm') {
                                 asukoht = nupp.getAsukoht();
-                                if (sisaldub(v_kaigud,asukoht)) {
+                                if (sisaldub(v_kaigud, asukoht)) {
                                     return false;
                                 }
                             }
@@ -95,7 +95,7 @@ public class Peaklass {
         for (int i = 0; i < tahestik.length; i++) {
             if (kaik.startsWith(tahestik[i])) esimene = i;
         }
-        int teine = Integer.parseInt(String.valueOf(kaik.charAt(1)))-1;
+        int teine = Integer.parseInt(String.valueOf(kaik.charAt(1))) - 1;
         return new int[]{teine, esimene};
 
     }
@@ -144,16 +144,40 @@ public class Peaklass {
         return kaik_string;
     }
 
-    public static void main(String[] args){ //TODO võiks olla nii, et kui valid nupu, millel käike pole, siis ütleb sulle kohe, et selle nupuga ei saa käia ja küsib uuesti algus_nuppu
-        //TODO Kuidagi implementeerida seda nagu males, et kui valid nupu ära siis saad ainult sellega käia (mingi while tsükkel seal legaalsete käikud juures),ei saa implementeerida enne kui ülemine todo on tehtud
-        //TODO etturi jõudmine lõppu
+    public static void ettur_jõuab_lõppu(Malelaud laud, Scanner sc){
+        int i = -1;
+        int j = -1;
+        for (Nupp nupp : laud.getLaud()[0]) {
+            if (nupp != null && nupp.getClass() == Ettur.class){
+                i = 0;
+                j = nupp.getAsukoht()[1];
+            }
+        }
+        for (Nupp nupp : laud.getLaud()[7]) {
+            if (nupp != null && nupp.getClass() == Ettur.class){
+                i = 7;
+                j = nupp.getAsukoht()[1];
+            }
+        }
+        if (i == -1)
+            return;
+
+        System.out.println("Ettur jõudis lõppu! Valige milleks ettur muutub: 'Lipp', 'Oda', 'Ratsu', 'Vanker'");
+        String muutub = sc.nextLine().trim();
+        while (!(muutub.equals("Lipp") || muutub.equals("Oda") || muutub.equals("Ratsu") || muutub.equals("Vanker"))){
+             System.out.println("Vigane sisend, proovige uuesti!");
+              muutub = sc.nextLine().trim();
+        }
+        laud.ettur_muutub(muutub, (Ettur) laud.getLaud()[i][j]);
+
+    }
+
+    public static void main(String[] args){
         //TODO mängu  lõpp
         boolean valge_kaik = true;
         char värv = 'v';
         Malelaud laud = new Malelaud();
         laud.väljasta();
-        //System.out.println(Arrays.deepToString(laud.getLaud()[0][0].kaigud(laud).toArray()));
-        //System.out.println(laud.getLaud()[1][0].getClass() == Ettur.class);
         boolean mang_kaib=true;
         Scanner sc = new Scanner(System.in);
         String kaik_string;
@@ -163,71 +187,51 @@ public class Peaklass {
         ArrayList<int[]> legaalsed_kaigud;
         while(mang_kaib){
             if (valge_kaik)
-                System.out.println("Valge Käik:");
+                System.out.println("Valge käik, alguskäik:");
             else
-                System.out.println("Musta Käik:");
+                System.out.println("Musta käik, alguskäik:");
 
-                kaik_string = valideeri_käik(sc);
-                kaik_int1 = dekodeeri_kaik(kaik_string);
-                vaadeldavnupp = laud.getLaud()[kaik_int1[0]][kaik_int1[1]];
+            do {
+            kaik_string = valideeri_käik(sc);
+            kaik_int1 = dekodeeri_kaik(kaik_string);
+            vaadeldavnupp = laud.getLaud()[kaik_int1[0]][kaik_int1[1]];
 
-                if (vaadeldavnupp != null) {
-                    if (vaadeldavnupp.getVarv() == värv) {
-                        legaalsed_kaigud = legaalsus_filter(vaadeldavnupp.kaigud(laud),kaik_int1,laud,valge_kaik);
-                        for (int[] ints : legaalsed_kaigud) {
-                            if (ints.length == 3) continue; // kui on en passant abikäik, siis ära prindi en passant abikäik näeb välja {x, y, 1}
-                            System.out.println(kodeeri_kaik(ints));
-                        }
-                        kaik_string = valideeri_käik(sc);
-                        kaik_int2 = dekodeeri_kaik(kaik_string);
-                        if (sisaldub(legaalsed_kaigud, kaik_int2)){
-                            laud.liiguta(kaik_int1, kaik_int2);
-                            laud.väljasta();
-                            valge_kaik = !valge_kaik;
-                            värv = (valge_kaik)? 'v' : 'm';
-                            käiguarv++;
-                        }
-                        else {
-                            System.out.println("Pole legaalne kaik! ");
-                            laud.väljasta();
-                        }
-                    } else
-                        System.out.print("See nupp pole sinu nupp! ");
-                }
-                else
-                    System.out.print("Sellel kohal pole nuppu! ");
+            if (vaadeldavnupp == null){
+                System.out.print("Sellel kohal pole nuppu! ");
+                legaalsed_kaigud = new ArrayList<>();
+                continue;
             }
-            /*
-            else{
-                System.out.println("Musta käik:");
+            if (vaadeldavnupp.getVarv() != värv){
+                System.out.print("See nupp pole sinu nupp! ");
+                legaalsed_kaigud = new ArrayList<>();
+                continue;
+            }
+            legaalsed_kaigud = legaalsus_filter(vaadeldavnupp.kaigud(laud),kaik_int1,laud,valge_kaik);
+            if (legaalsed_kaigud.size() == 0) System.out.println("Selle nupuga ei saa liikuda! Sisetage alguskäik uuesti:");
+            }
+            while (legaalsed_kaigud.size() == 0);
+
+            System.out.print("Võimalikud käigud: ");
+            for (int[] ints : legaalsed_kaigud) {
+                if (ints.length == 3) continue; // kui on en passant abikäik, siis ära prindi en passant abikäik näeb välja {x, y, 1}
+                System.out.print(kodeeri_kaik(ints) + " ");
+            }
+            System.out.println();
+            //System.out.println("Kuhu soovid nupuga käia?");
+            do {
                 kaik_string = valideeri_käik(sc);
-                kaik_int1 = dekodeeri_kaik(kaik_string);
-                vaadeldavnupp = laud.getLaud()[kaik_int1[0]][kaik_int1[1]];
-                if (vaadeldavnupp != null) {
-                    if (vaadeldavnupp.getVarv() == 'm') {
-                        legaalsed_kaigud = legaalsus_filter(vaadeldavnupp.kaigud(laud),kaik_int1,laud,valge_kaik);
-                        for (int[] ints : legaalsed_kaigud) {
-                            if (ints.length == 3) continue;
-                            System.out.println(kodeeri_kaik(ints));
-                        }
-                        kaik_string = valideeri_käik(sc);
-                        kaik_int2 = dekodeeri_kaik(kaik_string);
-                        if (sisaldub(legaalsed_kaigud,kaik_int2)){
-                            laud.liiguta(kaik_int1,kaik_int2);
-                            laud.väljasta();
-                            valge_kaik = true;
-                            käiguarv++;
-                        }
-                        else {
-                            System.out.println("Pole legaalne kaik! ");
-                            laud.väljasta();
-                        }
-                    }
-                    else
-                        System.out.print("See nupp pole sinu nupp! ");
-                }
-                else
-                    System.out.print("Sellel kohal pole nuppu! ");
-            }*/
+                kaik_int2 = dekodeeri_kaik(kaik_string);
+                if (! sisaldub(legaalsed_kaigud, kaik_int2))
+                    System.out.println("Sinna ei saa selle nupuga käia! Sisestage uus sihtkoht: ");
+            }
+            while (! sisaldub(legaalsed_kaigud, kaik_int2));
+            laud.liiguta(kaik_int1, kaik_int2);
+            ettur_jõuab_lõppu(laud, sc);
+            laud.väljasta();
+            valge_kaik = !valge_kaik;
+            värv = (valge_kaik) ? 'v' : 'm';
+            käiguarv++;
         }
     }
+}
+
