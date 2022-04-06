@@ -7,14 +7,14 @@ public class Vanker extends Nupp{
     public Vanker(char varv, int[] asukoht) {
         this.varv = varv;
         this.asukoht=asukoht;
+        on_liigutatud=false;
     }
 
     @Override
     public void setAsukoht(int[] asukoht) {
         super.setAsukoht(asukoht);
-        on_liigutatud = true;
+        this.on_liigutatud=true;
     }
-
     @Override
     public ArrayList<int[]> kaigud(Malelaud malelaud) {
         ArrayList<int[]> tulemus = new ArrayList<>();
@@ -64,5 +64,9 @@ public class Vanker extends Nupp{
     @Override
     public String toString() {
         return varv + "Va";
+    }
+
+    public boolean isOn_liigutatud() {
+        return on_liigutatud;
     }
 }

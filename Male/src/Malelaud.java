@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Malelaud {
+public class Malelaud{
     private Nupp[][] laud;
     private final char[] tahestik={'a','b','c','d','e','f','g','h'};
 
@@ -9,12 +9,12 @@ public class Malelaud {
 
         //Valged etturid
             for (int i = 0; i < 8; i++) {
-                laud[1][i] = new Ettur('v', new int[]{1, i});
+                laud[1][i] = new Ettur('v', new int[]{1, i},false);
             }
 
         //Mustad etturid
             for (int i = 0; i < 8; i++) {
-                laud[6][i] = new Ettur('m', new int[]{6, i});
+                laud[6][i] = new Ettur('m', new int[]{6, i},false);
             }
 
         //Valged vankrid
@@ -46,15 +46,60 @@ public class Malelaud {
             laud[7][3] = new Lipp('m', new int[]{7, 3});
 
         //Kuningad
-            laud[0][4]=new Kuningas('v', new int[]{0, 4});
-            laud[7][4]=new Kuningas('m', new int[]{7, 4});
+            laud[0][4]=new Kuningas('v', new int[]{0, 4},false);
+            laud[7][4]=new Kuningas('m', new int[]{7, 4},false);
     }
 
     public Nupp[][] getLaud() {
         return laud;
     }
+    public Malelaud(Malelaud teinelaud){
+        this.laud=new Nupp[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(teinelaud.getLaud()[i][j]!=null){
+                    if (teinelaud.getLaud()[i][j].getClass()==Ettur.class){
+                        Ettur et=(Ettur) teinelaud.getLaud()[i][j];
+                        this.laud[i][j]=new Ettur(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j},et.isOn_liigutatud());
+                    }
+                    if (teinelaud.getLaud()[i][j].getClass()==Ratsu.class){
+                        this.laud[i][j]=new Ratsu(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
+
+                    }
+                    if (teinelaud.getLaud()[i][j].getClass()==Oda.class){
+                        this.laud[i][j]=new Oda(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
+
+                    }
+                    if (teinelaud.getLaud()[i][j].getClass()==Lipp.class){
+                        this.laud[i][j]=new Lipp(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
+
+                    }
+                    if (teinelaud.getLaud()[i][j].getClass()==Kuningas.class){
+                        Kuningas kunn=(Kuningas) teinelaud.getLaud()[i][j];
+                        this.laud[i][j]=new Kuningas(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j},kunn.isOn_liigutatud());
+
+                    }
+                    if (teinelaud.getLaud()[i][j].getClass()==Vanker.class){
+                        this.laud[i][j]=new Vanker(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
+
+                    }
+                }
+            }
+        }
+    }
 
     public void liiguta(int[] asukoht, int[] sihtasukoht){
+        if (laud[asukoht[0]][asukoht[1]]==null){
+            return;
+        }
+        if (laud[asukoht[0]][asukoht[1]].getClass() == Kuningas.class){
+            if (asukoht[1]==4 && sihtasukoht[1]==6){
+                liiguta(new int[]{asukoht[0],7},new int[]{asukoht[0],5});
+            }
+            if (asukoht[1]==4 && sihtasukoht[1]==2){
+                liiguta(new int[]{asukoht[0],0},new int[]{asukoht[0],3});
+            }
+        }
         //en passanti if
         if (laud[asukoht[0]][asukoht[1]].getClass() == Ettur.class){
             if (laud[asukoht[0]][asukoht[1]].getVarv() == 'v'){
