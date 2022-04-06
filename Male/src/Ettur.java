@@ -88,10 +88,10 @@ public class Ettur extends Nupp{
     }
 
     public boolean ett_saab_käia(Malelaud malelaud, int i, int j){
-        return i > 0 && i < 8 && malelaud.getLaud()[i][j] == null;
+        return i > -1 && i < 8 && malelaud.getLaud()[i][j] == null;
     }
     public boolean ett_saab_süüa(Malelaud malelaud, int i, int j){
-        return i > 0 && i < 8 && j > 0 && j < 8 && malelaud.getLaud()[i][j] != null && malelaud.getLaud()[i][j].getVarv() != varv;
+        return i > -1 && i < 8 && j > -1 && j < 8 && malelaud.getLaud()[i][j] != null && malelaud.getLaud()[i][j].getVarv() != varv;
     }
 
     @Override
