@@ -222,12 +222,47 @@ public class Peaklass {
             return false;
         }
     }
+    /**
+     *
+     * @param malelaud ja see kes just käis (true, kui just käis valge ja false, kui just käis must)
+     * @tagastab true, kui vastase kuningas on tule all
+     *           false, kui vastase kuningas ei ole tule all
+     */
+    public static boolean vastasekuningas_tule_all(Malelaud malelaud, boolean valge_kais){
+        ArrayList<int[]>minu_kaigud=vastasekaigud(malelaud,!valge_kais);
+        int[]kuninga_asukoht=new int[2];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (malelaud.getLaud()[i][j]!=null){
+                    if (malelaud.getLaud()[i][j].getClass()==Kuningas.class){
+                        if (valge_kais){
+                            if (malelaud.getLaud()[i][j].getVarv()=='m'){
+                                kuninga_asukoht[0]=i;
+                                kuninga_asukoht[1]=j;
+                            }
+                        }
+                        else{
+                            if (malelaud.getLaud()[i][j].getVarv()=='v'){
+                                kuninga_asukoht[0]=i;
+                                kuninga_asukoht[1]=j;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (sisaldub(minu_kaigud,kuninga_asukoht)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     public static void main(String[] args){
         //TODO mängu  lõpp
         //TODO kui keegi ei saa liikuda
 
         //laud.väljasta_char(); //Tõõtab kasutades unicode charactere
-        laud.väljasta();
         String kaik_string;
         int[] kaik_int1;
         int[] kaik_int2;
