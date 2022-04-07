@@ -74,7 +74,7 @@ public class Malelaud{
                         this.laud[i][j]=new Kuningas(teinelaud.getLaud()[i][j].getVarv(),new int[]{i, j},kunn.isOn_liigutatud());
                     }
                     if (teinelaud.getLaud()[i][j].getClass() == Vanker.class){
-                        this.laud[i][j] = new Vanker(teinelaud.getLaud()[i][j].getVarv(), new int[]{i, j}); //TODO siin pole vaja vanker.on_liigutatud?
+                        this.laud[i][j] = new Vanker(teinelaud.getLaud()[i][j].getVarv(), new int[]{i, j});
                     }
                 }
             }

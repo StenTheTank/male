@@ -192,7 +192,7 @@ public class Peaklass {
     /**
      *
      * @param malelaud ja kes just käis
-     * @tagastab true, kui vastasel pole legaalseid käike
+     * @return true, kui vastasel pole legaalseid käike
      *           false, kui vastasel on mõni legaalne käik
      */
     public static boolean mangu_lopp (Malelaud malelaud, boolean valge_kais){
@@ -204,28 +204,23 @@ public class Peaklass {
                     vaadeldavnupp = malelaud.getLaud()[i][j];
                     if (valge_kais) {
                         if (malelaud.getLaud()[i][j].getVarv() == 'm') {
-                            vastase_legaalsed_kaigud.addAll(legaalsus_filter(vaadeldavnupp.kaigud(malelaud),new int[]{i,j},malelaud,valge_kais));
+                            vastase_legaalsed_kaigud.addAll(legaalsus_filter(vaadeldavnupp.kaigud(malelaud),new int[]{i,j},malelaud, false));
                         }
                     }
                     else{
                         if (malelaud.getLaud()[i][j].getVarv() == 'v') {
-                            vastase_legaalsed_kaigud.addAll(legaalsus_filter(vaadeldavnupp.kaigud(malelaud),new int[]{i,j},malelaud,valge_kais));
+                            vastase_legaalsed_kaigud.addAll(legaalsus_filter(vaadeldavnupp.kaigud(malelaud),new int[]{i,j}, malelaud, true));
                         }
                     }
                 }
             }
         }
-        if (vastase_legaalsed_kaigud.size()==0){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return vastase_legaalsed_kaigud.size() == 0;
     }
     /**
      *
      * @param malelaud ja see kes just käis (true, kui just käis valge ja false, kui just käis must)
-     * @tagastab true, kui vastase kuningas on tule all
+     * @return true, kui vastase kuningas on tule all
      *           false, kui vastase kuningas ei ole tule all
      */
     public static boolean vastasekuningas_tule_all(Malelaud malelaud, boolean valge_kais){
@@ -251,17 +246,10 @@ public class Peaklass {
                 }
             }
         }
-        if (sisaldub(minu_kaigud,kuninga_asukoht)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return sisaldub(minu_kaigud, kuninga_asukoht);
     }
 
     public static void main(String[] args){
-        //TODO mängu  lõpp
-        //TODO kui keegi ei saa liikuda
 
         System.out.println("************************************************************************************************************");
         System.out.println("Male mängimise juhend: ");
@@ -363,7 +351,14 @@ public class Peaklass {
                 laud.väljasta_char(); //Tõõtab kasutades unicode charactere
             else
                 laud.väljasta();
-            //if matt
+            if (mangu_lopp(laud, valge_kaik)){
+                if (vastasekuningas_tule_all(laud, valge_kaik)){
+                    String võitja = (värv == 'v')? "Valge, " +  valge_mängija : "Must, " + must_mängija;
+                    System.out.println("Mängu lõpp, " + võitja + " võitis!");
+                }else
+                    System.out.println("Mängu lõpp, mäng lõppes viigiga!");
+                mang_kaib = false;
+            }
             valge_kaik = !valge_kaik;
             värv = (valge_kaik) ? 'v' : 'm';
             käiguarv++;
