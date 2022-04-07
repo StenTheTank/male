@@ -16,7 +16,14 @@ public class Peaklass {
         return käiguarv;
     }
 
-
+    /**
+     *
+     * @param kaigud nupu käigud
+     * @param asukoht nupu asukoht
+     * @param praegune_malelaud praegune malelaud
+     * @param valge_kaik valge käik hetkel
+     * @return Nupu käigud, mille puhul on kontrollitud, et kuningas ei jääks tule alla peale käigu tegemist
+     */
     public static ArrayList<int[]> legaalsus_filter(ArrayList<int[]> kaigud, int[] asukoht, Malelaud praegune_malelaud, boolean valge_kaik){
         ArrayList<int[]> legaalsed_kaigud = new ArrayList<>();
         Malelaud voimalik;
