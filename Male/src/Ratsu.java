@@ -6,6 +6,7 @@ public class Ratsu extends Nupp{
     public Ratsu(char varv,int[] asukoht) {
         this.varv = varv;
         this.asukoht=asukoht;
+        this.un_char = (varv != 'v')? '\u2658' : '\u265E';
     }
 
     public boolean abiratsu(int rida,int veerg, Malelaud malelaud){

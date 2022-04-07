@@ -8,12 +8,14 @@ public class Ettur extends Nupp{
         this.varv = varv;
         this.asukoht = asukoht;
         this.on_liigutatud = on_liigutatud;
+        this.un_char = (varv != 'v')? '\u2659' : '\u265F';
         käidud = 0;
     }
     public Ettur(char varv, int[] asukoht, boolean on_liigutatud, int käidud ) {
         this.varv = varv;
         this.asukoht = asukoht;
         this.on_liigutatud = on_liigutatud;
+        this.un_char = (varv != 'v')? '\u2659' : '\u265F';
         this.käidud = käidud;
     }
 

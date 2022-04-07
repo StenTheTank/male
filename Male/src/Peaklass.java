@@ -1,12 +1,15 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Scanner;
+
+import java.util.*;
 
 public class Peaklass {
     private static final ArrayList<Character> tahestik_char = new ArrayList<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'));
     private static final ArrayList<Character> numbrid_char = new ArrayList<>(Arrays.asList('1', '2', '3', '4', '5', '6', '7', '8'));
     private static int käiguarv = 1;
+    private static boolean valge_kaik = true;
+    private static char värv = 'v';
+    private static final Malelaud laud = new Malelaud();
+    private static boolean mang_kaib = true;
+    private static final Scanner sc = new Scanner(System.in);
 
     public static int getKäiguarv() {
         return käiguarv;
@@ -17,8 +20,6 @@ public class Peaklass {
         ArrayList<int[]> legaalsed_kaigud = new ArrayList<>();
         Malelaud voimalik;
 
-        boolean vanker_liikus = false;
-        boolean kunn_liikus = false;
         for (int[] kaik : kaigud) {
             voimalik = new Malelaud(praegune_malelaud);
             voimalik.liiguta(asukoht, kaik);
@@ -144,7 +145,7 @@ public class Peaklass {
         return kaik_string;
     }
 
-    public static void ettur_jõuab_lõppu(Malelaud laud, Scanner sc){
+    public static void ettur_jõuab_lõppu(){
         int i = -1;
         int j = -1;
         for (Nupp nupp : laud.getLaud()[0]) {
@@ -172,19 +173,35 @@ public class Peaklass {
 
     }
 
+    /*public static void AI_vastu(){ ei tea kas teha
+        ArrayList<Nupp> võimalikud_nupud = new ArrayList<>();
+        for (Nupp[] nupp_mass : laud.getLaud()) {
+            for (Nupp nupp : nupp_mass) {
+                if (nupp != null && nupp.getVarv() == 'm' && legaalsus_filter(nupp.kaigud(laud), nupp.getAsukoht(), laud, valge_kaik).size() != 0)
+                    võimalikud_nupud.add(nupp);
+            }
+        }
+        if (võimalikud_nupud.size() == 0) return;
+        Collections.shuffle(võimalikud_nupud);
+        Nupp suvaline = võimalikud_nupud.get((int)(Math.random() * võimalikud_nupud.size()));
+        ArrayList<int[]> võimalikud_käigud = legaalsus_filter(suvaline.kaigud(laud), suvaline.getAsukoht(), laud, valge_kaik);
+        Collections.shuffle(võimalikud_käigud);
+        int[] suvaline_käik = võimalikud_käigud.get((int)(Math.random() * võimalikud_käigud.size()));
+        laud.liiguta(suvaline.getAsukoht(), suvaline_käik);
+    }*/
+
     public static void main(String[] args){
         //TODO mängu  lõpp
-        boolean valge_kaik = true;
-        char värv = 'v';
-        Malelaud laud = new Malelaud();
+        //TODO kui keegi ei saa liikuda
+
+        //laud.väljasta_char(); //Tõõtab kasutades unicode charactere
         laud.väljasta();
-        boolean mang_kaib=true;
-        Scanner sc = new Scanner(System.in);
         String kaik_string;
         int[] kaik_int1;
         int[] kaik_int2;
         Nupp vaadeldavnupp;
         ArrayList<int[]> legaalsed_kaigud;
+
         while(mang_kaib){
             if (valge_kaik)
                 System.out.println("Valge käik, alguskäik:");
@@ -206,7 +223,7 @@ public class Peaklass {
                 legaalsed_kaigud = new ArrayList<>();
                 continue;
             }
-            legaalsed_kaigud = legaalsus_filter(vaadeldavnupp.kaigud(laud),kaik_int1,laud,valge_kaik);
+            legaalsed_kaigud = legaalsus_filter(vaadeldavnupp.kaigud(laud), kaik_int1, laud, valge_kaik);
             if (legaalsed_kaigud.size() == 0) System.out.println("Selle nupuga ei saa liikuda! Sisetage alguskäik uuesti:");
             }
             while (legaalsed_kaigud.size() == 0);
@@ -226,12 +243,12 @@ public class Peaklass {
             }
             while (! sisaldub(legaalsed_kaigud, kaik_int2));
             laud.liiguta(kaik_int1, kaik_int2);
-            ettur_jõuab_lõppu(laud, sc);
+            ettur_jõuab_lõppu();
             laud.väljasta();
+            //if matt
             valge_kaik = !valge_kaik;
             värv = (valge_kaik) ? 'v' : 'm';
             käiguarv++;
         }
     }
 }
-

@@ -14,7 +14,8 @@ public class Kuningas extends Nupp{
     public Kuningas(char varv, int[] asukoht,boolean on_liigutatud) {
         this.varv = varv;
         this.asukoht = asukoht;
-        this.on_liigutatud=on_liigutatud;
+        this.on_liigutatud = on_liigutatud;
+        this.un_char = (varv != 'v')? '\u2654' : '\u265A';
     }
     public boolean abikuningas(int rida,int veerg, Malelaud malelaud){
         if (rida<0 || veerg<0 ) return false;
@@ -72,7 +73,7 @@ public class Kuningas extends Nupp{
         }
         return vastus;
     }
-    public ArrayList<int[]>vastasekaigud(Malelaud laud,boolean valge_kaik) {
+    public ArrayList<int[]> vastasekaigud(Malelaud laud,boolean valge_kaik) { //TODO kas see pole sama meetod, mis peaklassis?
         ArrayList<int[]> vastus = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {

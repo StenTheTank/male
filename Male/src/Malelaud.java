@@ -1,8 +1,10 @@
 import java.util.Arrays;
 
 public class Malelaud{
-    private Nupp[][] laud;
+    private final Nupp[][] laud;
     private final char[] tahestik={'a','b','c','d','e','f','g','h'};
+    private final char lai_tyhik = '\u2003';
+
 
     public Malelaud() {
         laud = new Nupp[8][8];
@@ -58,30 +60,22 @@ public class Malelaud{
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if(teinelaud.getLaud()[i][j]!=null){
-                    if (teinelaud.getLaud()[i][j].getClass()==Ettur.class){
+                    if (teinelaud.getLaud()[i][j].getClass() == Ettur.class){
                         Ettur et = (Ettur) teinelaud.getLaud()[i][j];
                         this.laud[i][j] = new Ettur(teinelaud.getLaud()[i][j].getVarv(), new int[]{i,j},et.isOn_liigutatud(), et.getKäidud());
                     }
-                    if (teinelaud.getLaud()[i][j].getClass()==Ratsu.class){
-                        this.laud[i][j] = new Ratsu(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
-
-                    }
-                    if (teinelaud.getLaud()[i][j].getClass()==Oda.class){
-                        this.laud[i][j] = new Oda(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
-
-                    }
-                    if (teinelaud.getLaud()[i][j].getClass()==Lipp.class){
-                        this.laud[i][j] = new Lipp(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j});
-
-                    }
-                    if (teinelaud.getLaud()[i][j].getClass()==Kuningas.class){
+                    if (teinelaud.getLaud()[i][j].getClass() == Ratsu.class)
+                        this.laud[i][j] = new Ratsu(teinelaud.getLaud()[i][j].getVarv(), new int[]{i, j});
+                    if (teinelaud.getLaud()[i][j].getClass() == Oda.class)
+                        this.laud[i][j] = new Oda(teinelaud.getLaud()[i][j].getVarv(), new int[]{i, j});
+                    if (teinelaud.getLaud()[i][j].getClass() == Lipp.class)
+                        this.laud[i][j] = new Lipp(teinelaud.getLaud()[i][j].getVarv(), new int[]{i, j});
+                    if (teinelaud.getLaud()[i][j].getClass() == Kuningas.class){
                         Kuningas kunn = (Kuningas) teinelaud.getLaud()[i][j];
-                        this.laud[i][j]=new Kuningas(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j},kunn.isOn_liigutatud());
-
+                        this.laud[i][j]=new Kuningas(teinelaud.getLaud()[i][j].getVarv(),new int[]{i, j},kunn.isOn_liigutatud());
                     }
-                    if (teinelaud.getLaud()[i][j].getClass()==Vanker.class){
-                        this.laud[i][j]=new Vanker(teinelaud.getLaud()[i][j].getVarv(),new int[]{i,j}); //TODO siin pole vaja vanker.on_liigutatud?
-
+                    if (teinelaud.getLaud()[i][j].getClass() == Vanker.class){
+                        this.laud[i][j] = new Vanker(teinelaud.getLaud()[i][j].getVarv(), new int[]{i, j}); //TODO siin pole vaja vanker.on_liigutatud?
                     }
                 }
             }
@@ -131,17 +125,46 @@ public class Malelaud{
         System.out.println("2 " + rida_sõnena(1) + "2");
         System.out.println("1 " + rida_sõnena(0) + "1");
         System.out.println("   a   b   c   d   e   f   g   h");
-
     }
+
     public String rida_sõnena(int rea_indeks){
-        String tulemus = "";
+        StringBuilder tulemus = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             if (laud[rea_indeks][i] != null)
-                tulemus +=  laud[rea_indeks][i].toString() + " ";
+                tulemus.append(laud[rea_indeks][i].toString()).append(" ");
             else
-                tulemus += "*** ";
+                tulemus.append("*** ");
         }
-        return tulemus;
+        return tulemus.toString();
+    }
+    public void väljasta_char(){
+        System.out.println("  " + rida_sõnena_char(-1));
+        System.out.println("8 " + rida_sõnena_char(7) + " 8");
+        System.out.println("7 " + rida_sõnena_char(6) + " 7");
+        System.out.println("6 " + rida_sõnena_char(5) + " 6");
+        System.out.println("5 " + rida_sõnena_char(4) + " 5");
+        System.out.println("4 " + rida_sõnena_char(3) + " 4");
+        System.out.println("3 " + rida_sõnena_char(2) + " 3");
+        System.out.println("2 " + rida_sõnena_char(1) + " 2");
+        System.out.println("1 " + rida_sõnena_char(0) + " 1");
+        System.out.println("  " + rida_sõnena_char(-1));
+    }
+    public String rida_sõnena_char(int rea_indeks){
+        StringBuilder tulemus = new StringBuilder();
+        if (rea_indeks == -1){
+            for (char c : tahestik) {
+                tulemus.append(lai_tyhik).append(c).append(" ");
+            }
+
+        }else {
+            for (int i = 0; i < 8; i++) {
+                if (laud[rea_indeks][i] != null)
+                    tulemus.append(laud[rea_indeks][i].toCharString());
+                else
+                    tulemus.append("[").append(lai_tyhik).append("]");
+            }
+        }
+        return tulemus.toString();
     }
 
     public void ettur_muutub(String uus, Ettur ettur){
