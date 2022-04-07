@@ -21,8 +21,7 @@ public class Kuningas extends Nupp{
         if (rida<0 || veerg<0 ) return false;
         if (rida>7 || veerg > 7) return false;
         if (malelaud.getLaud()[rida][veerg]==null) return true;
-        else if (malelaud.getLaud()[rida][veerg].getVarv() != varv) return true;
-        return false;
+        else return malelaud.getLaud()[rida][veerg].getVarv() != varv;
     }
     @Override
     public ArrayList<int[]> kaigud(Malelaud malelaud) {
@@ -52,8 +51,7 @@ public class Kuningas extends Nupp{
         Vanker v2=(Vanker) laud.getLaud()[asukoht[0]][0];
         boolean valge_kaik;
         ArrayList<int[]>vastus=new ArrayList<>();
-        if (varv=='v') valge_kaik=true;
-        else valge_kaik=false;
+        valge_kaik= varv == 'v';
         ArrayList<int[]>v_kaigud;
         if (laud.getLaud()[asukoht[0]][5]==null && laud.getLaud()[asukoht[0]][6]==null) {
             if (!on_liigutatud && !v1.isOn_liigutatud()) {
@@ -73,7 +71,7 @@ public class Kuningas extends Nupp{
         }
         return vastus;
     }
-    public ArrayList<int[]> vastasekaigud(Malelaud laud,boolean valge_kaik) { //TODO kas see pole sama meetod, mis peaklassis?
+    public ArrayList<int[]> vastasekaigud(Malelaud laud,boolean valge_kaik) {
         ArrayList<int[]> vastus = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
