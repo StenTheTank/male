@@ -6,6 +6,12 @@ public abstract class Nupp {
     protected int[] asukoht;
     protected char un_char; //unicode chraracter
 
+    /**
+     *
+     * @param malelaud malelaud
+     * @return Tagastab listi selle nupu võimalikest käikudest antud malelaua puhul
+     */
+
     public abstract ArrayList<int[]> kaigud(Malelaud malelaud);//vb selle meetodiga annaks ette võimalikud käigud, mida selle nupuga teha saab?
 
     public char getVarv() {

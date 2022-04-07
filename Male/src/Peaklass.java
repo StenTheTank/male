@@ -1,4 +1,5 @@
 
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class Peaklass {
@@ -133,10 +134,9 @@ public class Peaklass {
 
     /**
      *
-     * @param sc skanner, mis võtab vastu sisendit
      * @return sobiv string nt("a2", aga mitte "2a")
      */
-    public static String valideeri_käik(Scanner sc){
+    public static String valideeri_käik(){
         String kaik_string = sc.nextLine();
         while (! valideeri_käigu_formaat(kaik_string)){
             System.out.println("Käigu formaat ei ole sobilik, proovige uuesti:");
@@ -258,11 +258,59 @@ public class Peaklass {
             return false;
         }
     }
+
     public static void main(String[] args){
         //TODO mängu  lõpp
         //TODO kui keegi ei saa liikuda
 
-        //laud.väljasta_char(); //Tõõtab kasutades unicode charactere
+        System.out.println("************************************************************************************************************");
+        System.out.println("Male mängimise juhend: ");
+        System.out.println("Mängimiseks kasutage nupu koordinaate kujul \"b7\".");
+        System.out.println("Kõigepealt sisestage liigutatava nupu koordinaat.");
+        System.out.println("Seejärel, kui selle nupuga on teil võimalik käia, väljastatakse teile selle nupu võimalikud sihtkoodinaadid.");
+        System.out.println("Järgmiseks palun valige koordinaaadid, kuhu tes soovite selle nupuga liikuda.");
+        System.out.println("************************************************************************************************************");
+        System.out.println("Sisestage mängija 1 nimi: ");
+        String mängija1 = sc.nextLine().trim();
+        System.out.println("Sisetage mängija 2 nimi: ");
+        String mängija2 = sc.nextLine().trim();
+        String valge_mängija;
+        String must_mängija;
+        int coin_flip = (int)(Math.random() * 2);
+        if (coin_flip == 1){
+            valge_mängija = mängija1;
+            must_mängija = mängija2;
+            System.out.println(mängija1 + " mängib valgetega, " + mängija2 + " mängib mustadega!");
+        }else {
+            valge_mängija = mängija2;
+            must_mängija= mängija1;
+            System.out.println(mängija2 + " mängib valgetega, " + mängija1 + " mängib mustadega!");
+        }
+        System.out.println("************************************************************************************************************");
+
+        System.out.println("Sisestage sõne \"char\", kui soovite kasutada väljastuses malenuppude päris formaati.");
+        System.out.println("Sisestage sõne \"string\", kui soovite kasutada väljastuses malenuppude sõnena esitamise formaati. Näited allpool.");
+        System.out.println("Näide malenuppude päris formaadist: ");
+        laud.väljasta_char();
+        System.out.println("Näide malenuppude sõnena esitamise formaadist: ");
+        laud.väljasta();
+        String väljastus;
+        do {
+             väljastus = sc.nextLine().trim();
+             if (!(väljastus.equals("char") || väljastus.equals("string")))
+                 System.out.println("Sõne ei ole ei \"char\" ega \"string\", proovige uuesti.");
+        }while (!(väljastus.equals("char") || väljastus.equals("string")));
+
+        boolean välj_char;
+        välj_char = väljastus.equals("char");
+
+        System.out.println("************************************************************************************************************");
+        System.out.println("Head mängu!");
+        if (välj_char)
+            laud.väljasta_char(); //Tõõtab kasutades unicode charactere
+        else
+            laud.väljasta();
+  
         String kaik_string;
         int[] kaik_int1;
         int[] kaik_int2;
@@ -271,12 +319,12 @@ public class Peaklass {
 
         while(mang_kaib){
             if (valge_kaik)
-                System.out.println("Valge käik, alguskäik:");
+                System.out.println(valge_mängija + ", Valge käik, alguskäik:");
             else
-                System.out.println("Musta käik, alguskäik:");
+                System.out.println(must_mängija + ", Musta käik, alguskäik:");
 
             do {
-            kaik_string = valideeri_käik(sc);
+            kaik_string = valideeri_käik();
             kaik_int1 = dekodeeri_kaik(kaik_string);
             vaadeldavnupp = laud.getLaud()[kaik_int1[0]][kaik_int1[1]];
 
@@ -303,7 +351,7 @@ public class Peaklass {
             System.out.println();
             //System.out.println("Kuhu soovid nupuga käia?");
             do {
-                kaik_string = valideeri_käik(sc);
+                kaik_string = valideeri_käik();
                 kaik_int2 = dekodeeri_kaik(kaik_string);
                 if (! sisaldub(legaalsed_kaigud, kaik_int2))
                     System.out.println("Sinna ei saa selle nupuga käia! Sisestage uus sihtkoht: ");
@@ -311,7 +359,10 @@ public class Peaklass {
             while (! sisaldub(legaalsed_kaigud, kaik_int2));
             laud.liiguta(kaik_int1, kaik_int2);
             ettur_jõuab_lõppu();
-            laud.väljasta();
+            if (välj_char)
+                laud.väljasta_char(); //Tõõtab kasutades unicode charactere
+            else
+                laud.väljasta();
             //if matt
             valge_kaik = !valge_kaik;
             värv = (valge_kaik) ? 'v' : 'm';

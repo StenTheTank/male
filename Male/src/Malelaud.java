@@ -3,7 +3,6 @@ import java.util.Arrays;
 public class Malelaud{
     private final Nupp[][] laud;
     private final char[] tahestik={'a','b','c','d','e','f','g','h'};
-    private final char lai_tyhik = '\u2003';
 
 
     public Malelaud() {
@@ -82,6 +81,11 @@ public class Malelaud{
         }
     }
 
+    /**
+     *
+     * @param asukoht liigutatava nupu esialgne asukoht
+     * @param sihtasukoht liigutatava nupu sihtasukoht
+     */
     public void liiguta(int[] asukoht, int[] sihtasukoht){
         if (laud[asukoht[0]][asukoht[1]]==null){
             return;
@@ -151,6 +155,7 @@ public class Malelaud{
     }
     public String rida_sõnena_char(int rea_indeks){
         StringBuilder tulemus = new StringBuilder();
+        char lai_tyhik = '\u2003';
         if (rea_indeks == -1){
             for (char c : tahestik) {
                 tulemus.append(lai_tyhik).append(c).append(" ");
