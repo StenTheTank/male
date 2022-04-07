@@ -6,6 +6,7 @@ public class Oda extends Nupp {
     public Oda(char varv, int[] asukoht) {
         this.varv = varv;
         this.asukoht = asukoht;
+        this.un_char = (varv != 'v')? '\u2657' : '\u265D';
     }
 
     public ArrayList<int[]> kaigud(Malelaud malelaud) {

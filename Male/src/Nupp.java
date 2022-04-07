@@ -4,6 +4,7 @@ import java.util.Arrays;
 public abstract class Nupp {
     protected char varv;
     protected int[] asukoht;
+    protected char un_char; //unicode chraracter
 
     public abstract ArrayList<int[]> kaigud(Malelaud malelaud);//vb selle meetodiga annaks ette võimalikud käigud, mida selle nupuga teha saab?
 
@@ -23,5 +24,7 @@ public abstract class Nupp {
         this.asukoht = asukoht;
     }
 
-
+    public String toCharString(){
+        return "["+ un_char + "]";
+    }
 }

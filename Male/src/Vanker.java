@@ -6,8 +6,9 @@ public class Vanker extends Nupp{
 
     public Vanker(char varv, int[] asukoht) {
         this.varv = varv;
-        this.asukoht=asukoht;
-        on_liigutatud=false;
+        this.asukoht = asukoht;
+        on_liigutatud = false;
+        this.un_char = (varv != 'v')? '\u2656' : '\u265C';
     }
 
     @Override

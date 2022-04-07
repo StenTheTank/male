@@ -7,6 +7,7 @@ public class Lipp extends Nupp{
     public Lipp(char varv,int[] asukoht) {
         this.varv = varv;
         this.asukoht=asukoht;
+        this.un_char = (varv != 'v')? '\u2655' : '\u265B';
     }
 
 
