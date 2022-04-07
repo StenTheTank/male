@@ -173,6 +173,92 @@ public class Peaklass {
 
     }
 
+    /*public static void AI_vastu(){ ei tea kas teha
+        ArrayList<Nupp> võimalikud_nupud = new ArrayList<>();
+        for (Nupp[] nupp_mass : laud.getLaud()) {
+            for (Nupp nupp : nupp_mass) {
+                if (nupp != null && nupp.getVarv() == 'm' && legaalsus_filter(nupp.kaigud(laud), nupp.getAsukoht(), laud, valge_kaik).size() != 0)
+                    võimalikud_nupud.add(nupp);
+            }
+        }
+        if (võimalikud_nupud.size() == 0) return;
+        Collections.shuffle(võimalikud_nupud);
+        Nupp suvaline = võimalikud_nupud.get((int)(Math.random() * võimalikud_nupud.size()));
+        ArrayList<int[]> võimalikud_käigud = legaalsus_filter(suvaline.kaigud(laud), suvaline.getAsukoht(), laud, valge_kaik);
+        Collections.shuffle(võimalikud_käigud);
+        int[] suvaline_käik = võimalikud_käigud.get((int)(Math.random() * võimalikud_käigud.size()));
+        laud.liiguta(suvaline.getAsukoht(), suvaline_käik);
+    }*/
+    /**
+     *
+     * @param malelaud ja kes just käis
+     * @tagastab true, kui vastasel pole legaalseid käike
+     *           false, kui vastasel on mõni legaalne käik
+     */
+    public static boolean mangu_lopp (Malelaud malelaud, boolean valge_kais){
+        ArrayList<int[]>vastase_legaalsed_kaigud=new ArrayList<>();
+        Nupp vaadeldavnupp;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (malelaud.getLaud()[i][j]!=null){
+                    vaadeldavnupp = malelaud.getLaud()[i][j];
+                    if (valge_kais) {
+                        if (malelaud.getLaud()[i][j].getVarv() == 'm') {
+                            vastase_legaalsed_kaigud.addAll(legaalsus_filter(vaadeldavnupp.kaigud(malelaud),new int[]{i,j},malelaud,valge_kais));
+                        }
+                    }
+                    else{
+                        if (malelaud.getLaud()[i][j].getVarv() == 'v') {
+                            vastase_legaalsed_kaigud.addAll(legaalsus_filter(vaadeldavnupp.kaigud(malelaud),new int[]{i,j},malelaud,valge_kais));
+                        }
+                    }
+                }
+            }
+        }
+        if (vastase_legaalsed_kaigud.size()==0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    /**
+     *
+     * @param malelaud ja see kes just käis (true, kui just käis valge ja false, kui just käis must)
+     * @tagastab true, kui vastase kuningas on tule all
+     *           false, kui vastase kuningas ei ole tule all
+     */
+    public static boolean vastasekuningas_tule_all(Malelaud malelaud, boolean valge_kais){
+        ArrayList<int[]>minu_kaigud=vastasekaigud(malelaud,!valge_kais);
+        int[]kuninga_asukoht=new int[2];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (malelaud.getLaud()[i][j]!=null){
+                    if (malelaud.getLaud()[i][j].getClass()==Kuningas.class){
+                        if (valge_kais){
+                            if (malelaud.getLaud()[i][j].getVarv()=='m'){
+                                kuninga_asukoht[0]=i;
+                                kuninga_asukoht[1]=j;
+                            }
+                        }
+                        else{
+                            if (malelaud.getLaud()[i][j].getVarv()=='v'){
+                                kuninga_asukoht[0]=i;
+                                kuninga_asukoht[1]=j;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (sisaldub(minu_kaigud,kuninga_asukoht)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public static void main(String[] args){
         //TODO mängu  lõpp
         //TODO kui keegi ei saa liikuda
@@ -224,6 +310,7 @@ public class Peaklass {
             laud.väljasta_char(); //Tõõtab kasutades unicode charactere
         else
             laud.väljasta();
+  
         String kaik_string;
         int[] kaik_int1;
         int[] kaik_int2;
