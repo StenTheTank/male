@@ -2,7 +2,12 @@ package com.example.oopprojekt.malemang;
 
 import javafx.application.Application;
 import javafx.beans.value.ObservableDoubleValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -23,23 +28,50 @@ public class Peaklass extends Application {
     private static boolean mang_kaib = true;
     private static final Scanner sc = new Scanner(System.in);
 
+    EventHandler<MouseEvent> buttonEventHandler(){
+        return event -> {
+            Node node = (Node) event.getTarget();
+            int rida = GridPane.getRowIndex(node);
+            int veerg = GridPane.getColumnIndex(node);
+            System.out.println(kodeeri_kaik(new int[]{7-(rida-1),veerg-1}));
+        };
+    }
     public void start(Stage primaryStage) {
         GridPane pane = new GridPane();
 
         int count = 0;
         double s = 50; // side of rectangle
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
             count++;
-            for (int j = 0; j < 8; j++) {
+            for (int j = 1; j < 9; j++) {
                 Rectangle r = new Rectangle(s,s);
-                r.widthProperty().bind(pane.widthProperty().subtract(20).divide(8));
-                r.heightProperty().bind(pane.heightProperty().subtract(20).divide(8));
+                r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));
+                r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
                 if (count % 2 != 0)
                     r.setFill(Color.WHITE);
+                r.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        buttonEventHandler());
                 pane.add(r, j, i);
                 count++;
             }
         }
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                Text text=new Text(tahestik_char.get(j).toString());
+                GridPane.setHalignment(text, HPos.CENTER);
+                pane.add(text,j+1,i*9);
+            }
+        }
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                Text text=new Text(numbrid_char.get(numbrid_char.size()-1-j).toString());
+                GridPane.setHalignment(text, HPos.CENTER);
+                pane.add(text,i*9,j+1);
+            }
+        }
+
+
+
         pane.setStyle("-fx-border-color: black;");
         // Create a scene and place it in the stage
         Scene scene = new Scene(pane);
@@ -294,6 +326,7 @@ public class Peaklass extends Application {
 
     public static void main(String[] args){
         launch(args);
+        /*
         System.out.println("************************************************************************************************************");
         System.out.println("Male mängimise juhend: ");
         System.out.println("Mängimiseks kasutage nupu koordinaate kujul \"b7\".");
@@ -405,6 +438,6 @@ public class Peaklass extends Application {
             valge_kaik = !valge_kaik;
             värv = (valge_kaik) ? 'v' : 'm';
             käiguarv++;
-        }
+        }**/
     }
 }
