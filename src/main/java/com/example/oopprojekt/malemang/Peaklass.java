@@ -5,15 +5,23 @@ import javafx.beans.value.ObservableDoubleValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -31,12 +39,12 @@ public class Peaklass extends Application {
     EventHandler<MouseEvent> buttonEventHandler(){
         return event -> {
             Node node = (Node) event.getTarget();
-            int rida = GridPane.getRowIndex(node);
-            int veerg = GridPane.getColumnIndex(node);
+            int rida = GridPane.getRowIndex(node.getParent());
+            int veerg = GridPane.getColumnIndex(node.getParent());
             System.out.println(kodeeri_kaik(new int[]{7-(rida-1),veerg-1}));
         };
     }
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         GridPane pane = new GridPane();
 
         int count = 0;
@@ -45,13 +53,30 @@ public class Peaklass extends Application {
             count++;
             for (int j = 1; j < 9; j++) {
                 Rectangle r = new Rectangle(s,s);
-                r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));
-                r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
+                r.setHeight(75);
+                r.setWidth(75);
+                //r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));
+                //r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
                 if (count % 2 != 0)
                     r.setFill(Color.WHITE);
-                r.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                        buttonEventHandler());
-                pane.add(r, j, i);
+                else
+                    r.setFill(Color.SADDLEBROWN);
+                //r.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        //buttonEventHandler());
+                //pane.add(r, j, i);
+                StackPane stackPane = new StackPane(r);
+
+                if (laud.getLaud()[i-1][j-1] != null){
+                    String failinimi = "Graafika/" + pildi_nimi(laud.getLaud()[i-1][j-1]) + ".png";
+                    InputStream sisse = new FileInputStream(failinimi);
+                    Image pilt = new Image(sisse);
+                    ImageView imageView = new ImageView(pilt);
+                    stackPane.getChildren().add(imageView);
+                    //imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
+                    //pane.add(imageView, j, i);
+                }
+                stackPane.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
+                pane.add(stackPane, j, i);
                 count++;
             }
         }
@@ -66,22 +91,54 @@ public class Peaklass extends Application {
             for (int j = 0; j < 8; j++) {
                 Text text=new Text(numbrid_char.get(numbrid_char.size()-1-j).toString());
                 GridPane.setHalignment(text, HPos.CENTER);
-                pane.add(text,i*9,j+1);
+                pane.add(text,i * 9,j + 1);
             }
         }
-
-
 
         pane.setStyle("-fx-border-color: black;");
         // Create a scene and place it in the stage
         Scene scene = new Scene(pane);
-        primaryStage.setTitle("java2s.com");
+        primaryStage.setTitle("Male");
         primaryStage.setScene(scene); // Place in scene in the stage
         primaryStage.show();
 
     }
     public static int getKäiguarv() {
         return käiguarv;
+    }
+
+    public static String pildi_nimi(Nupp n){
+        if (n.getClass() == Ettur.class){
+            if (n.varv == 'v')
+                return "valge_ettur";
+            return "must_ettur";
+        }
+        if (n.getClass() == Vanker.class){
+            if (n.varv == 'v')
+                return "valge_vanker";
+            return "must_vanker";
+        }
+        if (n.getClass() == Ratsu.class){
+            if (n.varv == 'v')
+                return "valge_ratsu";
+            return "must_ratsu";
+        }
+        if (n.getClass() == Oda.class){
+            if (n.varv == 'v')
+                return "valge_oda";
+            return "must_oda";
+        }
+        if (n.getClass() == Kuningas.class){
+            if (n.varv == 'v')
+                return "valge_kunn";
+            return "must_kunn";
+        }
+        if (n.getClass() == Lipp.class){
+            if (n.varv == 'v')
+                return "valge_lipp";
+            return "must_lipp";
+        }
+        throw new IllegalArgumentException("Sellist nuppu ei leitud!");
     }
 
     /**
