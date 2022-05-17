@@ -1,12 +1,11 @@
 package com.example.oopprojekt.malemang;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Malelaud{
     private final Nupp[][] laud;
     private final char[] tahestik={'a','b','c','d','e','f','g','h'};
-
-
     public Malelaud() {
         laud = new Nupp[8][8];
 
@@ -182,6 +181,30 @@ public class Malelaud{
             default -> new Vanker(ettur.varv, ettur.asukoht);
         };
         laud[ettur.getAsukoht()[0]][ettur.getAsukoht()[1]] = malend;
+    }
+
+    public ArrayList<int[]> vastasekaigud( boolean valge_kaik) {
+        ArrayList<int[]> vastus = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (laud[i][j]!=null) {
+                    if (laud[i][j].getClass() != Kuningas.class) {
+                        if (valge_kaik) {
+                            if (laud[i][j].getVarv() == 'm') {
+                                ArrayList<int[]> ajutine = laud[i][j].kaigud(this);
+                                vastus.addAll(ajutine);
+                            }
+                        } else {
+                            if (laud[i][j].getVarv() == 'v') {
+                                ArrayList<int[]> ajutine = laud[i][j].kaigud(this);
+                                vastus.addAll(ajutine);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return vastus;
     }
 
     @Override

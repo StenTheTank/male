@@ -52,12 +52,12 @@ public class Kuningas extends Nupp{
         Vanker v1 = (laud.getLaud()[asukoht[0]][7] != null && laud.getLaud()[asukoht[0]][7].getClass() == Vanker.class)? (Vanker) laud.getLaud()[asukoht[0]][7] : null;
         Vanker v2 = (laud.getLaud()[asukoht[0]][0] != null && laud.getLaud()[asukoht[0]][0].getClass() == Vanker.class)? (Vanker) laud.getLaud()[asukoht[0]][0] : null;
         boolean valge_kaik;
-        ArrayList<int[]>vastus=new ArrayList<>();
+        ArrayList<int[]>vastus = new ArrayList<>();
         valge_kaik = varv == 'v';
         ArrayList<int[]>v_kaigud;
         if (laud.getLaud()[asukoht[0]][5] == null && laud.getLaud()[asukoht[0]][6] == null) {
             if (v1 != null && !on_liigutatud && !v1.isOn_liigutatud()) {
-                v_kaigud=vastasekaigud(laud,valge_kaik);
+                v_kaigud = laud.vastasekaigud(valge_kaik);
                 if (!(sisaldub(v_kaigud,new int[]{asukoht[0], 5}) || sisaldub(v_kaigud,new int[]{asukoht[0], 4}))) {
                     vastus.add(new int[]{asukoht[0], 6});
                 }
@@ -65,7 +65,7 @@ public class Kuningas extends Nupp{
         }
         if (laud.getLaud()[asukoht[0]][1]==null && laud.getLaud()[asukoht[0]][2]==null && laud.getLaud()[asukoht[0]][3]==null) {
             if (v2 != null && !on_liigutatud && !v2.isOn_liigutatud()) {
-                v_kaigud=vastasekaigud(laud,valge_kaik);
+                v_kaigud = laud.vastasekaigud(valge_kaik);
                 if (!(sisaldub(v_kaigud,new int[]{asukoht[0], 3}) || sisaldub(v_kaigud,new int[]{asukoht[0], 4}))) {
                     vastus.add(new int[]{asukoht[0], 2});
                 }
@@ -73,30 +73,6 @@ public class Kuningas extends Nupp{
         }
         return vastus;
     }
-    public ArrayList<int[]> vastasekaigud(Malelaud laud,boolean valge_kaik) {
-        ArrayList<int[]> vastus = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (laud.getLaud()[i][j]!=null) {
-                    if (laud.getLaud()[i][j].getClass() != Kuningas.class) {
-                        if (valge_kaik) {
-                            if (laud.getLaud()[i][j].getVarv() == 'm') {
-                                ArrayList<int[]> ajutine = laud.getLaud()[i][j].kaigud(laud);
-                                vastus.addAll(ajutine);
-                            }
-                        } else {
-                            if (laud.getLaud()[i][j].getVarv() == 'v') {
-                                ArrayList<int[]> ajutine = laud.getLaud()[i][j].kaigud(laud);
-                                vastus.addAll(ajutine);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return vastus;
-    }
-
     @Override
     public String toString() {
         return varv + "Ku";
