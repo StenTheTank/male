@@ -38,4 +38,10 @@ public class Ratsu extends Nupp{
     public String toString() {
         return varv + "Ra";
     }
+    @Override
+    public String KodeeriNupp(){
+        String tulemus = toString();
+        tulemus += "," + asukoht[0] + "," + asukoht[1];
+        return tulemus;
+    }
 }
