@@ -29,4 +29,10 @@ public class Lipp extends Nupp{
     public String toString() {
         return varv + "Li";
     }
+    @Override
+    public String KodeeriNupp(){
+        String tulemus = toString();
+        tulemus += "," + asukoht[0] + "," + asukoht[1];
+        return tulemus;
+    }
 }

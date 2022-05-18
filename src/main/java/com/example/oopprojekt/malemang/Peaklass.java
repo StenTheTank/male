@@ -3,11 +3,9 @@ package com.example.oopprojekt.malemang;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableDoubleValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -15,7 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -68,10 +67,6 @@ public class Peaklass extends Application {
                 }
                 try {
                     naita_kaike(legaalsed_kaigud);
-                    alguskoht = vaadeldav_käik;
-                    alguse_leg_käigud = legaalsed_kaigud;
-                    System.out.println("Valitud:" + kodeeri_kaik(vaadeldav_käik));
-                    return;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -79,49 +74,26 @@ public class Peaklass extends Application {
                 alguse_leg_käigud = legaalsed_kaigud;
                 System.out.println("Valitud:" + kodeeri_kaik(vaadeldav_käik));
             }else{
-                Nupp vaadeldav_nupp = laud.getLaud()[vaadeldav_käik[0]][vaadeldav_käik[1]];
-                if (vaadeldav_nupp!=null) {
-                    ArrayList<int[]> legaalsed_kaigud = legaalsus_filter(vaadeldav_nupp.kaigud(laud), vaadeldav_käik, laud, valge_kaik);
-                    if (vaadeldav_nupp.varv == värv) {
-                        try {
-                            naita_kaike(legaalsed_kaigud);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        alguskoht = vaadeldav_käik;
-                        alguse_leg_käigud = legaalsed_kaigud;
-                        System.out.println("Valitud:" + kodeeri_kaik(vaadeldav_käik));
-                        return;
-                    }
-                }
                 if (! sisaldub(alguse_leg_käigud, vaadeldav_käik)){
                     System.out.println("Sinna ei saa selle nupuga käia!");
                     return;
                 }
                 laud.liiguta(alguskoht, vaadeldav_käik);
                 System.out.println("Liigutasin: " + kodeeri_kaik(alguskoht) + " -> " + kodeeri_kaik(vaadeldav_käik));
+                try {
+                    ettur_jõuab_lõppu();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 alguskoht = null;
                 if (mangu_lopp(laud,valge_kaik)){
-                    if (vastasekuningas_tule_all(laud,valge_kaik)) {
-                        System.out.println("mang läbi");
-                        Text text = new Text("Mäng läbi, võitis: " + värv);
-                        text.setFont(Font.font(20));
-                        text.setX(700);
-                        text.setY(250);
-                        juur.getChildren().clear();
-                        juur.getChildren().add(text);
-                        return;
-                    }
-                    else{
-                        System.out.println("mang läbi");
-                        Text text = new Text("Mäng läbi, viik");
-                        text.setFont(Font.font(20));
-                        text.setX(700);
-                        text.setY(250);
-                        juur.getChildren().clear();
-                        juur.getChildren().add(text);
-                        return;
-                    }
+                    System.out.println("mang läbi");
+                    Text text=new Text("Mäng läbi, võitis: "+värv);
+                    text.setFont(Font.font(20));
+                    text.setX(700);
+                    text.setY(250);
+                    juur.getChildren().removeAll();
+                    juur.getChildren().add(text);
                 }
                 try {
                     updateGridPane();
@@ -131,11 +103,6 @@ public class Peaklass extends Application {
                 valge_kaik = !valge_kaik;
                 värv = (valge_kaik) ? 'v' : 'm';
                 käiguarv++;
-                try {
-                    ettur_jõuab_lõppu();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         };
     }
@@ -256,8 +223,10 @@ public class Peaklass extends Application {
                 pane.add(text,i * 9,j + 1);
             }
         }
+
         pane.setStyle("-fx-border-color: black;");
-        juur.getChildren().clear();
+
+        juur.getChildren().removeAll();
         juur.getChildren().add(pane);
         juur.getChildren().add(button);
     }
@@ -600,7 +569,7 @@ public class Peaklass extends Application {
 
         pane.setStyle("-fx-border-color: black;");
 
-        juur.getChildren().clear();
+        juur.getChildren().removeAll();
         juur.getChildren().add(pane);
         juur.getChildren().add(button);
         juur.getChildren().add(lipp);

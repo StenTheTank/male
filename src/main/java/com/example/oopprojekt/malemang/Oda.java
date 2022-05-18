@@ -67,6 +67,12 @@ public class Oda extends Nupp {
     public String toString() {
         return varv + "Od";
     }
+    @Override
+    public String KodeeriNupp(){
+        String tulemus = toString();
+        tulemus += "," + asukoht[0] + "," + asukoht[1];
+        return tulemus;
+    }
 }
 
 

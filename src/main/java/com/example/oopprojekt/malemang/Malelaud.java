@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Malelaud{
     private final Nupp[][] laud;
-    private final char[] tahestik={'a','b','c','d','e','f','g','h'};
+    private static final char[] tahestik = {'a','b','c','d','e','f','g','h'};
     public Malelaud() {
         laud = new Nupp[8][8];
 
@@ -212,5 +212,50 @@ public class Malelaud{
         return "Malelaud{" +
                 "laud=" + Arrays.deepToString(laud) +
                 '}';
+    }
+
+    public String kodeerilaud(){
+        String tulemus = "";
+        for (int i = 0; i < laud.length; i++) {
+            for (int j = 0; j < laud.length; j++) {
+                if (laud[i][j] == null)
+                    tulemus += ";";
+                else
+                    tulemus += ";" + laud[i][j].KodeeriNupp();
+            }
+        }
+        return tulemus;
+    }
+    public Malelaud(String s){
+        String[] info = s.split(";");
+        if (info.length != 64)
+            throw new IllegalArgumentException("Sellest sõnest ei saa malelauda moodustada");
+        this.laud = new Nupp[8][8];
+        for (int i = 0; i < info.length; i++) {
+            if (info[i].equals("")){
+                this.laud[i / 8][i % 8] = null;
+                continue;
+            }
+            String[] nupu_info = info[i].split(",");
+            String klass = nupu_info[0].substring(1);
+            char värv = nupu_info[0].charAt(0);
+            int x = Integer.parseInt(nupu_info[1]);
+            int y = Integer.parseInt(nupu_info[2]);
+            Nupp vaadeldav;
+            if(nupu_info.length == 3){
+                switch (klass) {
+                    case "Ra" -> vaadeldav = new Ratsu(värv, new int[]{x, y});
+                    case "Od" -> vaadeldav = new Oda(värv, new int[]{x, y});
+                    default -> vaadeldav = new Lipp(värv, new int[]{x, y});
+                }
+            }else if (nupu_info.length == 4){
+                if (klass.equals("Ku"))
+                    vaadeldav = new Kuningas(värv, new int[]{x, y}, Integer.parseInt(nupu_info[3]) == 1);
+                else
+                    vaadeldav = new Vanker(värv, new int[]{x, y}, Integer.parseInt(nupu_info[3]) == 1);
+            }else
+                vaadeldav = new Ettur(värv, new int[]{x, y}, Integer.parseInt(nupu_info[3]) == 1, Integer.parseInt(nupu_info[4]));
+            this.laud[i / 8][i % 8] = vaadeldav;
+        }
     }
 }

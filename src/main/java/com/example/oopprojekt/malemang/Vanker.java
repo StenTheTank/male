@@ -12,11 +12,17 @@ public class Vanker extends Nupp{
         on_liigutatud = false;
         this.un_char = (varv != 'v')? '\u2656' : '\u265C';
     }
+    public Vanker(char varv, int[] asukoht, boolean on_liigutatud) {
+        this.varv = varv;
+        this.asukoht = asukoht;
+        this.on_liigutatud = on_liigutatud;
+        this.un_char = (varv != 'v')? '\u2656' : '\u265C';
+    }
 
     @Override
     public void setAsukoht(int[] asukoht) {
         super.setAsukoht(asukoht);
-        this.on_liigutatud=true;
+        this.on_liigutatud = true;
     }
     @Override
     public ArrayList<int[]> kaigud(Malelaud malelaud) {
@@ -71,5 +77,12 @@ public class Vanker extends Nupp{
 
     public boolean isOn_liigutatud() {
         return on_liigutatud;
+    }
+    @Override
+    public String KodeeriNupp(){
+        String tulemus = toString();
+        tulemus += "," + asukoht[0] + "," + asukoht[1];
+        tulemus += (on_liigutatud)? ",1" : ",0";
+        return tulemus;
     }
 }

@@ -35,4 +35,9 @@ public abstract class Nupp {
     public String toCharString(){
         return "["+ un_char + "]";
     }
+
+    @Override
+    public abstract String toString();
+
+    public abstract String KodeeriNupp();
 }

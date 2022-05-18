@@ -103,4 +103,13 @@ public class Ettur extends Nupp{
         return varv + "Et";
     }
 
+    @Override
+    public String KodeeriNupp(){
+        String tulemus = toString();
+        tulemus += "," + asukoht[0] + "," + asukoht[1];
+        tulemus += (on_liigutatud)? ",1" : ",0";
+        tulemus += "," + käidud;
+        return tulemus;
+    }
+
 }
