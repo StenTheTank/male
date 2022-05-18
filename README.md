@@ -1,2 +1,0 @@
-# male
-OOP projekt male
