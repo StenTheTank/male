@@ -13,7 +13,7 @@ public class Kuningas extends Nupp{
     public boolean isOn_liigutatud() {
         return on_liigutatud;
     }
-    public Kuningas(char varv, int[] asukoht,boolean on_liigutatud) {
+    public Kuningas(char varv, int[] asukoht, boolean on_liigutatud) {
         this.varv = varv;
         this.asukoht = asukoht;
         this.on_liigutatud = on_liigutatud;
@@ -77,4 +77,13 @@ public class Kuningas extends Nupp{
     public String toString() {
         return varv + "Ku";
     }
+
+    @Override
+    public String KodeeriNupp(){
+        String tulemus = toString();
+        tulemus += "," + asukoht[0] + "," + asukoht[1];
+        tulemus += (on_liigutatud)? ",1" : ",0";
+        return tulemus;
+    }
+
 }
