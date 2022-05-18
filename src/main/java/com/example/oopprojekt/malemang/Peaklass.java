@@ -93,15 +93,30 @@ public class Peaklass extends Application {
                     System.out.println("Selle nupuga ei saa käia!");
                     return;
                 }
-                alguskoht = vaadeldav_käik;
-                alguse_leg_käigud = legaalsed_kaigud;
                 try {
+                    alguskoht = vaadeldav_käik;
+                    alguse_leg_käigud = legaalsed_kaigud;
                     updateGridPane();
+                    System.out.println("Valitud:" + kodeeri_kaik(vaadeldav_käik));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Valitud:" + kodeeri_kaik(vaadeldav_käik));
             }else{
+                Nupp vaadeldav_nupp = laud.getLaud()[vaadeldav_käik[0]][vaadeldav_käik[1]];
+                if (vaadeldav_nupp!=null) {
+                    ArrayList<int[]> legaalsed_kaigud = legaalsus_filter(vaadeldav_nupp.kaigud(laud), vaadeldav_käik, laud, valge_kaik);
+                    if (vaadeldav_nupp.varv == värv) {
+                        alguskoht = vaadeldav_käik;
+                        alguse_leg_käigud = legaalsed_kaigud;
+                        System.out.println("Valitud:" + kodeeri_kaik(vaadeldav_käik));
+                        try {
+                            updateGridPane();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return;
+                    }
+                }
                 if (! sisaldub(alguse_leg_käigud, vaadeldav_käik)){
                     System.out.println("Sinna ei saa selle nupuga käia!");
                     return;
@@ -109,21 +124,29 @@ public class Peaklass extends Application {
                 laud.liiguta(alguskoht, vaadeldav_käik);
 
                 System.out.println("Liigutasin: " + kodeeri_kaik(alguskoht) + " -> " + kodeeri_kaik(vaadeldav_käik));
-                try {
-                    writeToLog();
-                    ettur_jõuab_lõppu();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 alguskoht = null;
                 if (mangu_lopp(laud,valge_kaik)){
-                    System.out.println("mang läbi");
-                    Text text=new Text("Mäng läbi, võitis: "+värv);
-                    text.setFont(Font.font(20));
-                    text.setX(700);
-                    text.setY(250);
-                    juur.getChildren().removeAll();
-                    juur.getChildren().add(text);
+                    if(vastasekuningas_tule_all(laud,valge_kaik)) {
+                        System.out.println("mang läbi");
+                        Text text = new Text("Mäng läbi, võitis: " + värv);
+                        text.setFont(Font.font(20));
+                        text.setX(700);
+                        text.setY(250);
+                        juur.getChildren().clear();
+                        juur.getChildren().add(text);
+                        return;
+                    }
+                    else{
+                        System.out.println("mang läbi");
+                        Text text = new Text("Mäng läbi, viik");
+                        text.setFont(Font.font(20));
+                        text.setX(700);
+                        text.setY(250);
+                        juur.getChildren().clear();
+                        juur.getChildren().add(text);
+                        return;
+                    }
+
                 }
                 try {
                     updateGridPane();
@@ -133,6 +156,12 @@ public class Peaklass extends Application {
                 valge_kaik = !valge_kaik;
                 värv = (valge_kaik) ? 'v' : 'm';
                 käiguarv++;
+                try {
+                    writeToLog();
+                    ettur_jõuab_lõppu();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         };
     }
@@ -200,7 +229,7 @@ public class Peaklass extends Application {
 
         pane.setStyle("-fx-border-color: black;");
 
-        juur.getChildren().removeAll();
+        juur.getChildren().clear();
         juur.getChildren().add(pane);
         juur.getChildren().add(button);
     }
@@ -530,7 +559,7 @@ public class Peaklass extends Application {
 
         pane.setStyle("-fx-border-color: black;");
 
-        juur.getChildren().removeAll();
+        juur.getChildren().clear();
         juur.getChildren().add(pane);
         juur.getChildren().add(button);
         juur.getChildren().add(lipp);
