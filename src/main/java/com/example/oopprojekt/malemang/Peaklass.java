@@ -1,9 +1,7 @@
 package com.example.oopprojekt.malemang;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.value.ObservableDoubleValue;
-import javafx.event.ActionEvent;
+
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.scene.Group;
@@ -25,7 +23,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.HashMap;
 
 public class Peaklass extends Application {
     private static final ArrayList<Character> tahestik_char = new ArrayList<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'));
@@ -41,6 +39,36 @@ public class Peaklass extends Application {
     private static Group juur = new Group();
 
     private static String logifail = "male.log";
+    private static final HashMap<String, Image> images;
+
+    static {
+        try {
+            images = generateImageMap();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private static HashMap<String, Image> generateImageMap() throws IOException{
+        HashMap<String, Image> tulemus = new HashMap<>();
+        tulemus.put("mEt", generateImage("Graafika/must_ettur.png"));
+        tulemus.put("vEt", generateImage("Graafika/valge_ettur.png"));
+        tulemus.put("mKu", generateImage("Graafika/must_kunn.png"));
+        tulemus.put("vKu", generateImage("Graafika/valge_kunn.png"));
+        tulemus.put("mLi", generateImage("Graafika/must_lipp.png"));
+        tulemus.put("vLi", generateImage("Graafika/valge_lipp.png"));
+        tulemus.put("mRa", generateImage("Graafika/must_ratsu.png"));
+        tulemus.put("vRa", generateImage("Graafika/valge_ratsu.png"));
+        tulemus.put("mVa", generateImage("Graafika/must_vanker.png"));
+        tulemus.put("vVa", generateImage("Graafika/valge_vanker.png"));
+        tulemus.put("mOd", generateImage("Graafika/must_oda.png"));
+        tulemus.put("vOd", generateImage("Graafika/valge_oda.png"));
+        tulemus.put("tapp", generateImage("Graafika/tapp.png"));
+        return tulemus;
+    }
+    private static Image generateImage(String file) throws IOException{
+        InputStream sisse = new FileInputStream(file);
+        return new Image(sisse);
+    }
 
     static EventHandler<MouseEvent> buttonEventHandler() {
         return event -> {
@@ -120,7 +148,6 @@ public class Peaklass extends Application {
             }
         });
         GridPane pane = new GridPane();
-        //laud.väljasta();
 
         int count = 0;
         double s = 75; // side of rectangle
@@ -140,19 +167,11 @@ public class Peaklass extends Application {
                 StackPane stackPane = new StackPane(r);
 
                 if (laud.getLaud()[7-(i-1)][j-1] != null){
-                    String failinimi = "Graafika/" + pildi_nimi(laud.getLaud()[7-(i-1)][j-1]) + ".png";
-                    InputStream sisse = new FileInputStream(failinimi);
-                    Image pilt = new Image(sisse);
-                    ImageView imageView = new ImageView(pilt);
+                    ImageView imageView = new ImageView(images.get(laud.getLaud()[7-(i-1)][j-1].toString()));
                     stackPane.getChildren().add(imageView);
-                    //imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
-                    //pane.add(imageView, j, i);
                 }
                 if (alguskoht != null && sisaldub(alguse_leg_käigud, new int[]{7-(i-1),j-1})){
-                    String failinimi = "Graafika/tapp.png";
-                    InputStream sisse = new FileInputStream(failinimi);
-                    Image pilt = new Image(sisse);
-                    ImageView imageView = new ImageView(pilt);
+                    ImageView imageView = new ImageView(images.get("tapp"));
                     imageView.setFitHeight(10);
                     imageView.setFitWidth(10);
                     GridPane.setHalignment(imageView, HPos.CENTER);
