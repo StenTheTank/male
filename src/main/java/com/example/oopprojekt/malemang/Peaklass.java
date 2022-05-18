@@ -62,6 +62,11 @@ public class Peaklass extends Application {
                     System.out.println("Selle nupuga ei saa käia!");
                     return;
                 }
+                try {
+                    naita_kaike(legaalsed_kaigud);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 alguskoht = vaadeldav_käik;
                 alguse_leg_käigud = legaalsed_kaigud;
                 System.out.println("Valitud:" + kodeeri_kaik(vaadeldav_käik));
@@ -85,18 +90,81 @@ public class Peaklass extends Application {
         };
     }
 
+    private void naita_kaike(ArrayList<int[]> legaalsed_kaigud) throws IOException {
+        GridPane pane = new GridPane();
+        //laud.väljasta();
+
+        int count = 0;
+        double s = 75; // side of rectangle
+        for (int i = 1; i < 9; i++) {
+            count++;
+            for (int j = 1; j < 9; j++) {
+                Rectangle r = new Rectangle(s,s);
+                //r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));
+                //r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
+                if (count % 2 != 0)
+                    r.setFill(Color.WHITE);
+                else
+                    r.setFill(Color.SADDLEBROWN);
+                //r.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                //buttonEventHandler());
+                //pane.add(r, j, i);
+                StackPane stackPane = new StackPane(r);
+                if (laud.getLaud()[7-(i-1)][j-1] != null){
+                    String failinimi = "Graafika/" + pildi_nimi(laud.getLaud()[7-(i-1)][j-1]) + ".png";
+                    InputStream sisse = new FileInputStream(failinimi);
+                    Image pilt = new Image(sisse);
+                    ImageView imageView = new ImageView(pilt);
+                    stackPane.getChildren().add(imageView);
+                    //imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
+                    //pane.add(imageView, j, i);
+                }
+                if (sisaldub(legaalsed_kaigud,new int[]{7-(i-1),j-1})){
+                    String failinimi = "Graafika/tapp.png";
+                    InputStream sisse = new FileInputStream(failinimi);
+                    Image pilt = new Image(sisse);
+                    ImageView imageView = new ImageView(pilt);
+                    imageView.setFitHeight(10);
+                    imageView.setFitWidth(10);
+                    GridPane.setHalignment(imageView, HPos.CENTER);
+                    stackPane.getChildren().add(imageView);
+                }
+                stackPane.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
+                pane.add(stackPane, j, i);
+                count++;
+            }
+        }
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                Text text = new Text(tahestik_char.get(j).toString());
+                GridPane.setHalignment(text, HPos.CENTER);
+                pane.add(text,j+1,i*9);
+            }
+        }
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                Text text = new Text(numbrid_char.get(numbrid_char.size()-1-j).toString());
+                GridPane.setHalignment(text, HPos.CENTER);
+                pane.add(text,i * 9,j + 1);
+            }
+        }
+
+        pane.setStyle("-fx-border-color: black;");
+        juur.getChildren().removeAll();
+        juur.getChildren().add(pane);
+    }
+
     public void updateGridPane() throws IOException {
         GridPane pane = new GridPane();
         //laud.väljasta();
 
         int count = 0;
-        double s = 50; // side of rectangle
+        double s = 75; // side of rectangle
         for (int i = 1; i < 9; i++) {
             count++;
             for (int j = 1; j < 9; j++) {
                 Rectangle r = new Rectangle(s,s);
-                r.setHeight(75);
-                r.setWidth(75);
                 //r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));
                 //r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
                 if (count % 2 != 0)
