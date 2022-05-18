@@ -36,10 +36,10 @@ public class Peaklass extends Application {
     //private static final Scanner sc = new Scanner(System.in);
     private static int[] alguskoht = null;
     private static ArrayList<int[]> alguse_leg_käigud;
-    private static Group juur = new Group();
-
     private static String logifail = "male.log";
     private static final HashMap<String, Image> images;
+    private static GridPane gridPane;
+    private static Group juur;
 
     static {
         try {
@@ -167,32 +167,18 @@ public class Peaklass extends Application {
     }
 
     public static void updateGridPane() throws IOException {
-        Button button=new Button("Tagasi");
-        button.setLayoutX(620);
-        button.setOnMouseClicked(event -> {
-            try {
-                roll_Back();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
         GridPane pane = new GridPane();
-
         int count = 0;
         double s = 75; // side of rectangle
         for (int i = 1; i < 9; i++) {
             count++;
             for (int j = 1; j < 9; j++) {
                 Rectangle r = new Rectangle(s,s);
-                //r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));
-                //r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
+                //r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
                 if (count % 2 != 0)
                     r.setFill(Color.WHITE);
                 else
                     r.setFill(Color.SADDLEBROWN);
-                //r.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                //buttonEventHandler());
-                //pane.add(r, j, i);
                 StackPane stackPane = new StackPane(r);
 
                 if (laud.getLaud()[7-(i-1)][j-1] != null){
@@ -209,7 +195,6 @@ public class Peaklass extends Application {
                 stackPane.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
                 pane.add(stackPane, j, i);
                 count++;
-
             }
         }
         for (int i = 0; i < 2; i++) {
@@ -226,16 +211,26 @@ public class Peaklass extends Application {
                 pane.add(text,i * 9,j + 1);
             }
         }
-
         pane.setStyle("-fx-border-color: black;");
-
-        juur.getChildren().clear();
-        juur.getChildren().add(pane);
-        juur.getChildren().add(button);
+        if (gridPane != null)
+            juur.getChildren().remove(gridPane);
+        gridPane = pane;
+        juur.getChildren().add(gridPane);
     }
     public void start(Stage primaryStage) throws IOException {
         initLog();
+        Button button = new Button("Tagasi");
+        button.setLayoutX(620);
+        button.setOnMouseClicked(event -> {
+            try {
+                roll_Back();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        juur = new Group(button);
         updateGridPane();
+
         Scene scene = new Scene(juur);
         primaryStage.setTitle("Male");
         primaryStage.setScene(scene); // Place in scene in the stage
@@ -281,8 +276,6 @@ public class Peaklass extends Application {
         try(BufferedWriter välja = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logifail, true), StandardCharsets.UTF_8))){
             välja.write("\n" + käiguarv + laud.kodeerilaud());
         }
-        //String info = laud.kodeerilaud();
-        //new Malelaud(info.substring(info.indexOf(";")+1)).väljasta();
     }
 
     public static String pildi_nimi(Nupp n){
@@ -559,13 +552,14 @@ public class Peaklass extends Application {
 
         pane.setStyle("-fx-border-color: black;");
 
+        /*juur.getChildren().removeAll();
         juur.getChildren().clear();
         juur.getChildren().add(pane);
         juur.getChildren().add(button);
         juur.getChildren().add(lipp);
         juur.getChildren().add(oda);
         juur.getChildren().add(vanker);
-        juur.getChildren().add(ratsu);
+        juur.getChildren().add(ratsu);*/ //TODO: FIX THIS
     }
 
     /*public static void AI_vastu(){ ei tea kas teha
