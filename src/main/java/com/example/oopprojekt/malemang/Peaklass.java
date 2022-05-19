@@ -150,13 +150,12 @@ public class Peaklass extends Application {
         };
     }
 
-    private static void endGame(){
-        if (mangu_lopp(laud, valge_kaik)){
-            if(vastasekuningas_tule_all(laud, valge_kaik)) {
-                if (värv=='v')tekstiväli.setText("Mäng läbi, võitis: " + mängija1);
+    private static void endGame() {
+        if (mangu_lopp(laud, valge_kaik)) {
+            if (vastasekuningas_tule_all(laud, valge_kaik)) {
+                if (värv == 'v') tekstiväli.setText("Mäng läbi, võitis: " + mängija1);
                 else tekstiväli.setText("Mäng läbi, võitis: " + mängija2);
-            }
-            else{
+            } else {
                 tekstiväli.setText("Mäng läbi, viik");
             }
             try {
@@ -165,22 +164,23 @@ public class Peaklass extends Application {
                 e.printStackTrace();
             }
             mang_kaib = false;
-            Button uus_mang=new Button("Uus mäng");
-                    uus_mang.setOnMouseClicked(event1 -> {
-                        Stage s=(Stage) uus_mang.getScene().getWindow();
-                        s.close();
-                        try {
-                            laud=new Malelaud();
-                            värv='v';
-                            valge_kaik=true;
-                            käiguarv=1;
-                            nime_valikud(new Stage());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    uus_mang.setFont(Font.font(20));
-                    nupud.getChildren().add(uus_mang);
+            Button uus_mang = new Button("Uus mäng");
+            uus_mang.setOnMouseClicked(event1 -> {
+                Stage s = (Stage) uus_mang.getScene().getWindow();
+                s.close();
+                try {
+                    laud = new Malelaud();
+                    värv = 'v';
+                    valge_kaik = true;
+                    käiguarv = 1;
+                    nime_valikud(new Stage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            uus_mang.setFont(Font.font(20));
+            nupud.getChildren().add(uus_mang);
+        }
     }
 
     public static void updateGridPane() throws IOException {
@@ -232,7 +232,7 @@ public class Peaklass extends Application {
         pane.setMaxSize(630, 630);
         juur.setCenter(pane);
     }
-        public void mang_algab(Stage primaryStage)throws IOException{
+        public static void mang_algab(Stage primaryStage)throws IOException{
             initLog();
             Button tagasi = new Button("Tagasi");
             tagasi.setFont(Font.font(20));
@@ -305,7 +305,7 @@ public class Peaklass extends Application {
         primaryStage.show();
     }
 
-    private void nime_valikud(Stage primaryStage)throws IOException {
+    private static void nime_valikud(Stage primaryStage)throws IOException {
         TextField mängija_1 = new TextField("Mängija 1");
         TextField mängija_2 = new TextField("Mängija 2");
         Text valge=new Text("Valge");
