@@ -13,10 +13,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -42,9 +44,10 @@ public class Peaklass extends Application {
     private static final String logifail = "male.log";
     private static final HashMap<String, Image> images;
     private static GridPane gridPane;
-    private static Group juur;
+    private static BorderPane juur;
     private static ArrayList<Node> eemaldatavad;
     private static Text tekstiväli;
+    private static VBox nupud;
     private static String mängija1;
     private static String mängija2;
 
@@ -218,12 +221,20 @@ public class Peaklass extends Application {
                 pane.add(text,i * 9,j + 1);
             }
         }
-        pane.setStyle("-fx-border-color: black;");
-        if (gridPane != null)
-            juur.getChildren().remove(gridPane);
+        pane.setStyle("-fx-border-color: black;-fx-padding: 5, 0, 0, 0;");
+        pane.setMaxSize(630, 630);
+        //if (gridPane != null)
+            //juur.getChildren().remove(gridPane);
         gridPane = pane;
-        juur.getChildren().add(gridPane);
+        juur.setCenter(gridPane);
     }
+/*<<<<<<< Alexis
+    public void start(Stage primaryStage) throws IOException {
+        initLog();
+        Button tagasi = new Button("Tagasi");
+        tagasi.setFont(Font.font(20));
+        tagasi.setOnMouseClicked(event -> {
+=======*/
         public void mang_algab(Stage primaryStage)throws IOException{
             initLog();
             Button button = new Button("Tagasi");
@@ -255,12 +266,49 @@ public class Peaklass extends Application {
         Button alusta=new Button("Alusta");
         alusta.setOnMouseClicked(event -> {
             primaryStage.close();
+//>>>>>>> main
             try {
                 nime_valikud(primaryStage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+/*<<<<<<< Alexis
+        Button lahku = new Button("Lahku");
+        lahku.setFont(Font.font(20));
+        lahku.setOnMouseClicked(event -> System.exit(0));
+        lahku.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE)
+                System.exit(0);
+        });
+
+        tekstiväli = new Text();
+        tekstiväli.setFont(Font.font(20));
+        HBox tekst_abi = new HBox(tekstiväli);
+        tekst_abi.setAlignment(Pos.TOP_LEFT);
+        tekst_abi.setPrefHeight(10000);
+        tekst_abi.setMaxWidth(630);
+
+        nupud = new VBox(lahku, tagasi);
+        nupud.setMaxHeight(500);
+        nupud.setPrefWidth(10000);
+        nupud.setAlignment(Pos.TOP_LEFT);
+        nupud.setTranslateX(10);
+        nupud.setSpacing(5);
+
+        juur = new BorderPane();
+        juur.setBottom(tekst_abi);
+        BorderPane.setAlignment(tekst_abi, Pos.TOP_LEFT);
+        juur.setRight(nupud);
+        updateGridPane();
+        juur.setLayoutX(5);
+        //nupud.setStyle("-fx-background-color: yellow;");
+
+        primaryStage.setMinHeight(700);
+        primaryStage.setMinWidth(700);
+        primaryStage.setHeight(725);
+        primaryStage.setWidth(775);
+=======*/
         GridPane.setHalignment(alusta, HPos.CENTER);
         GridPane.setValignment(alusta, VPos.CENTER);
         algus.getChildren().add(alusta);
@@ -269,6 +317,7 @@ public class Peaklass extends Application {
         primaryStage.setScene(s);
         primaryStage.show();
     }
+//>>>>>>> main
 
     private void nime_valikud(Stage primaryStage)throws IOException {
         TextField mängija_1=new TextField("Mängija 1");
@@ -308,15 +357,17 @@ public class Peaklass extends Application {
     }
 
     public static void roll_Back() throws IOException {
-        if (käiguarv == 1)
+        if (käiguarv == 1){
+            tekstiväli.setText("Rohkem ei saa käike tagasi võtta");
             return;
+        }
         käiguarv--;
         laud = find_from_log(käiguarv - 1);
         alguskoht = null;
         valge_kaik = !valge_kaik;
         värv = (valge_kaik) ? 'v' : 'm';
         if (!mang_kaib){
-            juur.getChildren().removeAll(eemaldatavad);
+            nupud.getChildren().removeAll(eemaldatavad);
             mang_kaib = true;
         }
         updateGridPane();
@@ -461,7 +512,7 @@ public class Peaklass extends Application {
         if (i == -1)
             return;
 
-        tekstiväli.setText("Ettur jõudis lõppu! Valige milleks ettur muutub: 'Lipp', 'Oda', 'Ratsu', 'Vanker'");
+        tekstiväli.setText("Ettur jõudis lõppu! Valige milleks ettur muutub: 'Lipp', 'Oda', 'Vanker', 'Ratsu'");
         kuva_valikud(i,j);
     }
     static EventHandler<MouseEvent> ettur_muutub(String nupuks, int i, int j) {
@@ -474,32 +525,29 @@ public class Peaklass extends Application {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            juur.getChildren().removeAll(eemaldatavad);
+            nupud.getChildren().removeAll(eemaldatavad);
             mang_kaib = true;
             käiguarv++;
         };
     }
-    private static void kuva_valikud(int rida,int veerg) throws IOException {
+    private static void kuva_valikud(int rida,int veerg) {
         mang_kaib = false;
         eemaldatavad = new ArrayList<>();
+
         Button lipp = new Button("Lipp");
-        lipp.setLayoutX(620);
-        lipp.setLayoutY(30);
+        lipp.setFont(Font.font(20));
         lipp.setOnMouseClicked(ettur_muutub("Lipp", rida, veerg));
 
         Button oda = new Button("Oda");
-        oda.setLayoutX(620);
-        oda.setLayoutY(60);
+        oda.setFont(Font.font(20));
         oda.setOnMouseClicked(ettur_muutub("Oda", rida, veerg));
 
         Button ratsu = new Button("Ratsu");
-        ratsu.setLayoutX(620);
-        ratsu.setLayoutY(90);
+        ratsu.setFont(Font.font(20));
         ratsu.setOnMouseClicked(ettur_muutub("Ratsu", rida, veerg));
 
         Button vanker = new Button("Vanker");
-        vanker.setLayoutX(620);
-        vanker.setLayoutY(120);
+        vanker.setFont(Font.font(20));
         vanker.setOnMouseClicked(ettur_muutub("Vanker", rida, veerg));
 
         eemaldatavad.add(lipp);
@@ -507,10 +555,10 @@ public class Peaklass extends Application {
         eemaldatavad.add(ratsu);
         eemaldatavad.add(oda);
 
-        juur.getChildren().add(lipp);
-        juur.getChildren().add(oda);
-        juur.getChildren().add(vanker);
-        juur.getChildren().add(ratsu);
+        nupud.getChildren().add(lipp);
+        nupud.getChildren().add(oda);
+        nupud.getChildren().add(vanker);
+        nupud.getChildren().add(ratsu);
     }
 
     /**
