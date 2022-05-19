@@ -443,7 +443,7 @@ public class Peaklass extends Application {
             käiguarv++;
         };
     }
-    private static void kuva_valikud(int rida,int veerg) throws IOException {
+    private static void kuva_valikud(int rida,int veerg) {
         mang_kaib = false;
         eemaldatavad = new ArrayList<>();
 
