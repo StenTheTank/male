@@ -130,8 +130,6 @@ public class Peaklass extends Application {
                 tekstiväli.setText("Liigutasin: " + kodeeri_kaik(alguskoht) + " -> " + kodeeri_kaik(vaadeldav_käik));
                 alguskoht = null;
               
-                endGame();
-              
                 try {
                     updateGridPane();
                 } catch (IOException e) {
@@ -173,6 +171,7 @@ public class Peaklass extends Application {
                     värv = 'v';
                     valge_kaik = true;
                     käiguarv = 1;
+                    mang_kaib = true;
                     nime_valikud(new Stage());
                 } catch (IOException e) {
                     e.printStackTrace();
