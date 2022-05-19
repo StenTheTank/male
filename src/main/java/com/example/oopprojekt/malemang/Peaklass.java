@@ -179,7 +179,7 @@ public class Peaklass extends Application {
     public static void updateGridPane() throws IOException {
         GridPane pane = new GridPane();
         int count = 0;
-        double s = 75; // side of rectangle
+        double s = 70; // side of rectangle
         for (int i = 1; i < 9; i++) {
             count++;
             for (int j = 1; j < 9; j++) {
@@ -226,60 +226,60 @@ public class Peaklass extends Application {
         gridPane = pane;
         juur.setCenter(gridPane);
     }
-        public void mang_algab(Stage primaryStage)throws IOException{
-            initLog();
-            Button tagasi = new Button("Tagasi");
-            tagasi.setFont(Font.font(20));
-            tagasi.setOnMouseClicked(event -> {
-                try {
-                    roll_Back();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+    public void mang_algab(Stage primaryStage)throws IOException{
+        initLog();
+        Button tagasi = new Button("Tagasi");
+        tagasi.setFont(Font.font(20));
+        tagasi.setOnMouseClicked(event -> {
+            try {
+                roll_Back();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
-            Button lahku = new Button("Lahku");
-            lahku.setFont(Font.font(20));
-            lahku.setOnMouseClicked(event -> System.exit(0));
-            lahku.setOnKeyPressed(event -> {
-                if (event.getCode() == KeyCode.ESCAPE)
-                    System.exit(0);
-            });
+        Button lahku = new Button("Lahku");
+        lahku.setFont(Font.font(20));
+        lahku.setOnMouseClicked(event -> System.exit(0));
+        lahku.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE)
+                System.exit(0);
+        });
 
-            tekstiväli = new Text();
-            tekstiväli.setFont(Font.font(20));
-            HBox tekst_abi = new HBox(tekstiväli);
-            tekst_abi.setAlignment(Pos.TOP_LEFT);
-            tekst_abi.setPrefHeight(10000);
-            tekst_abi.setMaxWidth(630);
+        tekstiväli = new Text();
+        tekstiväli.setFont(Font.font(20));
+        HBox tekst_abi = new HBox(tekstiväli);
+        tekst_abi.setAlignment(Pos.TOP_LEFT);
+        tekst_abi.setPrefHeight(10000);
+        tekst_abi.setMaxWidth(630);
 
-            nupud = new VBox(lahku, tagasi);
-            nupud.setMaxHeight(500);
-            nupud.setPrefWidth(10000);
-            nupud.setAlignment(Pos.TOP_LEFT);
-            nupud.setTranslateX(10);
-            nupud.setSpacing(5);
+        nupud = new VBox(lahku, tagasi);
+        nupud.setMaxHeight(500);
+        nupud.setPrefWidth(10000);
+        nupud.setAlignment(Pos.TOP_LEFT);
+        nupud.setTranslateX(10);
+        nupud.setSpacing(5);
 
-            juur = new BorderPane();
-            juur.setBottom(tekst_abi);
-            juur.setRight(nupud);
-            updateGridPane();
-            juur.setLayoutX(5);
+        juur = new BorderPane();
+        juur.setBottom(tekst_abi);
+        juur.setRight(nupud);
+        updateGridPane();
+        juur.setLayoutX(5);
 
-            primaryStage.setMinHeight(700);
-            primaryStage.setMinWidth(700);
-            primaryStage.setHeight(725);
-            primaryStage.setWidth(775);
+        primaryStage.setMinHeight(700);
+        primaryStage.setMinWidth(700);
+        primaryStage.setHeight(725);
+        primaryStage.setWidth(775);
 
-            updateGridPane();
+        updateGridPane();
 
-            Scene scene = new Scene(juur);
-            primaryStage.setTitle("Male");
-            primaryStage.setScene(scene); // Place in scene in the stage
-            primaryStage.show();
-        }
+        Scene scene = new Scene(juur);
+        primaryStage.setTitle("Male");
+        primaryStage.setScene(scene); // Place in scene in the stage
+        primaryStage.show();
+    }
 
-        public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException {
         GridPane algus = new GridPane();
         algus.setPrefSize(600,600);
         algus.setAlignment(Pos.CENTER);
