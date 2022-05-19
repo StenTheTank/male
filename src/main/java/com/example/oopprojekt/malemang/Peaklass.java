@@ -1,12 +1,10 @@
 package com.example.oopprojekt.malemang;
 
 import javafx.application.Application;
-
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,16 +12,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -38,12 +33,10 @@ public class Peaklass extends Application {
     private static char värv = 'v';
     private static Malelaud laud = new Malelaud();
     private static boolean mang_kaib = true;
-    //private static final Scanner sc = new Scanner(System.in);
     private static int[] alguskoht = null;
     private static ArrayList<int[]> alguse_leg_käigud;
     private static final String logifail = "male.log";
     private static final HashMap<String, Image> images;
-    private static GridPane gridPane;
     private static BorderPane juur;
     private static ArrayList<Node> eemaldatavad;
     private static Text tekstiväli;
@@ -137,43 +130,44 @@ public class Peaklass extends Application {
 
                 tekstiväli.setText("Liigutasin: " + kodeeri_kaik(alguskoht) + " -> " + kodeeri_kaik(vaadeldav_käik));
                 alguskoht = null;
-                if (mangu_lopp(laud,valge_kaik)){
-                    if(vastasekuningas_tule_all(laud,valge_kaik)) {
-                        if (värv=='v')tekstiväli.setText("Mäng läbi, võitis: " + mängija1);
-                        else tekstiväli.setText("Mäng läbi, võitis: " + mängija2);
-                        try {
-                            updateGridPane();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return;
-                    }
-                    else{
-                        tekstiväli.setText("Mäng läbi, viik");
-                        try {
-                            updateGridPane();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return;
-                    }
-                }
+
                 try {
                     updateGridPane();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                }
-                valge_kaik = !valge_kaik;
-                värv = (valge_kaik) ? 'v' : 'm';
-                try {
+                }try {
                     ettur_jõuab_lõppu();
                     writeToLog();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                endGame();
+                valge_kaik = !valge_kaik;
+                värv = (valge_kaik) ? 'v' : 'm';
                 käiguarv++;
             }
         };
+    }
+
+    private static void endGame(){
+        if (mangu_lopp(laud, valge_kaik)){
+            if(vastasekuningas_tule_all(laud, valge_kaik)) {
+                if (värv=='v')tekstiväli.setText("Mäng läbi, võitis: " + mängija1);
+                else tekstiväli.setText("Mäng läbi, võitis: " + mängija2);
+            }
+            else{
+                tekstiväli.setText("Mäng läbi, viik");
+            }
+            try {
+                updateGridPane();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mang_kaib = false;
+            Button end = new Button("Alusta uuesti!");
+            end.setFont(Font.font(20));
+            nupud.getChildren().add(end); //TODO:bug kus valid etturi ära ja siis on matt
+        }
     }
 
     public static void updateGridPane() throws IOException {
@@ -223,19 +217,14 @@ public class Peaklass extends Application {
         }
         pane.setStyle("-fx-border-color: black;-fx-padding: 5, 0, 0, 0;");
         pane.setMaxSize(630, 630);
-        gridPane = pane;
-        juur.setCenter(gridPane);
+        juur.setCenter(pane);
     }
         public void mang_algab(Stage primaryStage)throws IOException{
             initLog();
             Button tagasi = new Button("Tagasi");
             tagasi.setFont(Font.font(20));
             tagasi.setOnMouseClicked(event -> {
-                try {
-                    roll_Back();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                try {roll_Back();} catch (IOException e) {throw new RuntimeException(e);}
             });
 
             Button lahku = new Button("Lahku");
@@ -279,7 +268,7 @@ public class Peaklass extends Application {
             primaryStage.show();
         }
 
-        public void start(Stage primaryStage) throws IOException {
+        public void start(Stage primaryStage) {
         GridPane algus = new GridPane();
         algus.setPrefSize(600,600);
         algus.setAlignment(Pos.CENTER);
@@ -303,8 +292,8 @@ public class Peaklass extends Application {
     }
 
     private void nime_valikud(Stage primaryStage)throws IOException {
-        TextField mängija_1=new TextField("Mängija 1");
-        TextField mängija_2=new TextField("Mängija 2");
+        TextField mängija_1 = new TextField("Mängija 1");
+        TextField mängija_2 = new TextField("Mängija 2");
         Text valge=new Text("Valge");
         Text must=new Text("Must");
         GridPane valikud=new GridPane();
@@ -328,11 +317,10 @@ public class Peaklass extends Application {
         valikud.add(alusta,1,2);
         valikud.add(mängija_1,0,1);
         valikud.add(mängija_2,2,1);
-        Scene s=new Scene(valikud);
+        Scene s = new Scene(valikud);
         primaryStage.setTitle("Male");
         primaryStage.setScene(s);
         primaryStage.show();
-
     }
 
     public static int getKäiguarv() {
@@ -511,6 +499,9 @@ public class Peaklass extends Application {
             nupud.getChildren().removeAll(eemaldatavad);
             mang_kaib = true;
             käiguarv++;
+            valge_kaik = !valge_kaik;
+            endGame();
+            valge_kaik = !valge_kaik;
         };
     }
     private static void kuva_valikud(int rida,int veerg) {
@@ -606,118 +597,5 @@ public class Peaklass extends Application {
 
     public static void main(String[] args){
         launch(args);
-        /*
-        System.out.println("************************************************************************************************************");
-        System.out.println("Male mängimise juhend: ");
-        System.out.println("Mängimiseks kasutage nupu koordinaate kujul \"b7\".");
-        System.out.println("Kõigepealt sisestage liigutatava nupu koordinaat.");
-        System.out.println("Seejärel, kui selle nupuga on teil võimalik käia, väljastatakse teile selle nupu võimalikud sihtkoodinaadid.");
-        System.out.println("Järgmiseks palun valige koordinaaadid, kuhu tes soovite selle nupuga liikuda.");
-        System.out.println("************************************************************************************************************");
-        System.out.println("Sisestage mängija 1 nimi: ");
-        String mängija1 = sc.nextLine().trim();
-        System.out.println("Sisetage mängija 2 nimi: ");
-        String mängija2 = sc.nextLine().trim();
-        String valge_mängija;
-        String must_mängija;
-        int coin_flip = (int)(Math.random() * 2);
-        if (coin_flip == 1){
-            valge_mängija = mängija1;
-            must_mängija = mängija2;
-            System.out.println(mängija1 + " mängib valgetega, " + mängija2 + " mängib mustadega!");
-        }else {
-            valge_mängija = mängija2;
-            must_mängija= mängija1;
-            System.out.println(mängija2 + " mängib valgetega, " + mängija1 + " mängib mustadega!");
-        }
-        System.out.println("************************************************************************************************************");
-
-        System.out.println("Sisestage sõne \"char\", kui soovite kasutada väljastuses malenuppude päris formaati.");
-        System.out.println("Sisestage sõne \"string\", kui soovite kasutada väljastuses malenuppude sõnena esitamise formaati. Näited allpool.");
-        System.out.println("Näide malenuppude päris formaadist: ");
-        laud.väljasta_char();
-        System.out.println("Näide malenuppude sõnena esitamise formaadist: ");
-        laud.väljasta();
-        String väljastus;
-        do {
-            väljastus = sc.nextLine().trim();
-            if (!(väljastus.equals("char") || väljastus.equals("string")))
-                System.out.println("Sõne ei ole ei \"char\" ega \"string\", proovige uuesti.");
-        }while (!(väljastus.equals("char") || väljastus.equals("string")));
-
-        boolean välj_char;
-        välj_char = väljastus.equals("char");
-
-        System.out.println("************************************************************************************************************");
-        System.out.println("Head mängu!");
-        if (välj_char)
-            laud.väljasta_char(); //Tõõtab kasutades unicode charactere
-        else
-            laud.väljasta();
-
-        String kaik_string;
-        int[] kaik_int1;
-        int[] kaik_int2;
-        Nupp vaadeldavnupp;
-        ArrayList<int[]> legaalsed_kaigud;
-
-        while(mang_kaib){
-            if (valge_kaik)
-                System.out.println(valge_mängija + ", Valge käik, alguskäik:");
-            else
-                System.out.println(must_mängija + ", Musta käik, alguskäik:");
-
-            do {
-                kaik_string = valideeri_käik();
-                kaik_int1 = dekodeeri_kaik(kaik_string);
-                vaadeldavnupp = laud.getLaud()[kaik_int1[0]][kaik_int1[1]];
-
-                if (vaadeldavnupp == null){
-                    System.out.print("Sellel kohal pole nuppu! ");
-                    legaalsed_kaigud = new ArrayList<>();
-                    continue;
-                }
-                if (vaadeldavnupp.getVarv() != värv){
-                    System.out.print("See nupp pole sinu nupp! ");
-                    legaalsed_kaigud = new ArrayList<>();
-                    continue;
-                }
-                legaalsed_kaigud = legaalsus_filter(vaadeldavnupp.kaigud(laud), kaik_int1, laud, valge_kaik);
-                if (legaalsed_kaigud.size() == 0) System.out.println("Selle nupuga ei saa liikuda! Sisetage alguskäik uuesti:");
-            }
-            while (legaalsed_kaigud.size() == 0);
-
-            System.out.print("Võimalikud käigud: ");
-            for (int[] ints : legaalsed_kaigud) {
-                if (ints.length == 3) continue; // kui on en passant abikäik, siis ära prindi en passant abikäik näeb välja {x, y, 1}
-                System.out.print(kodeeri_kaik(ints) + " ");
-            }
-            System.out.println();
-            //System.out.println("Kuhu soovid nupuga käia?");
-            do {
-                kaik_string = valideeri_käik();
-                kaik_int2 = dekodeeri_kaik(kaik_string);
-                if (! sisaldub(legaalsed_kaigud, kaik_int2))
-                    System.out.println("Sinna ei saa selle nupuga käia! Sisestage uus sihtkoht: ");
-            }
-            while (! sisaldub(legaalsed_kaigud, kaik_int2));
-            laud.liiguta(kaik_int1, kaik_int2);
-            ettur_jõuab_lõppu();
-            if (välj_char)
-                laud.väljasta_char(); //Tõõtab kasutades unicode charactere
-            else
-                laud.väljasta();
-            if (mangu_lopp(laud, valge_kaik)){
-                if (vastasekuningas_tule_all(laud, valge_kaik)){
-                    String võitja = (värv == 'v')? "Valge, " +  valge_mängija : "Must, " + must_mängija;
-                    System.out.println("Mängu lõpp, " + võitja + " võitis!");
-                }else
-                    System.out.println("Mängu lõpp, mäng lõppes viigiga!");
-                mang_kaib = false;
-            }
-            valge_kaik = !valge_kaik;
-            värv = (valge_kaik) ? 'v' : 'm';
-            käiguarv++;
-       */
     }
 }
