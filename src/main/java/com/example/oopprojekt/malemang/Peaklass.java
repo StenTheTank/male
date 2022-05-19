@@ -4,10 +4,13 @@ import javafx.application.Application;
 
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -36,10 +39,14 @@ public class Peaklass extends Application {
     //private static final Scanner sc = new Scanner(System.in);
     private static int[] alguskoht = null;
     private static ArrayList<int[]> alguse_leg_käigud;
-    private static Group juur = new Group();
-
-    private static String logifail = "male.log";
+    private static final String logifail = "male.log";
     private static final HashMap<String, Image> images;
+    private static GridPane gridPane;
+    private static Group juur;
+    private static ArrayList<Node> eemaldatavad;
+    private static Text tekstiväli;
+    private static String mängija1;
+    private static String mängija2;
 
     static {
         try {
@@ -72,6 +79,8 @@ public class Peaklass extends Application {
 
     static EventHandler<MouseEvent> buttonEventHandler() {
         return event -> {
+            if (! mang_kaib)
+                return;
             Node node = (Node) event.getSource();
             if (node.getClass() != StackPane.class)
                 return;
@@ -81,34 +90,34 @@ public class Peaklass extends Application {
             if (alguskoht == null){
                 Nupp vaadeldav_nupp = laud.getLaud()[vaadeldav_käik[0]][vaadeldav_käik[1]];
                 if (vaadeldav_nupp == null){
-                    System.out.println("Sellel kohal pole nuppu!");
+                    tekstiväli.setText("Sellel kohal pole nuppu!");
                     return;
                 }
                 if (vaadeldav_nupp.varv != värv){
-                    System.out.println("See pole sinu nupp!");
+                    tekstiväli.setText("See pole sinu nupp!");
                     return;
                 }
                 ArrayList<int[]> legaalsed_kaigud = legaalsus_filter(vaadeldav_nupp.kaigud(laud), vaadeldav_käik, laud, valge_kaik);
                 if (legaalsed_kaigud.size() == 0){
-                    System.out.println("Selle nupuga ei saa käia!");
+                    tekstiväli.setText("Selle nupuga ei saa käia!");
                     return;
                 }
                 try {
                     alguskoht = vaadeldav_käik;
                     alguse_leg_käigud = legaalsed_kaigud;
                     updateGridPane();
-                    System.out.println("Valitud:" + kodeeri_kaik(vaadeldav_käik));
+                    tekstiväli.setText("Valitud:" + kodeeri_kaik(vaadeldav_käik));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }else{
                 Nupp vaadeldav_nupp = laud.getLaud()[vaadeldav_käik[0]][vaadeldav_käik[1]];
-                if (vaadeldav_nupp!=null) {
+                if (vaadeldav_nupp != null) {
                     ArrayList<int[]> legaalsed_kaigud = legaalsus_filter(vaadeldav_nupp.kaigud(laud), vaadeldav_käik, laud, valge_kaik);
                     if (vaadeldav_nupp.varv == värv) {
                         alguskoht = vaadeldav_käik;
                         alguse_leg_käigud = legaalsed_kaigud;
-                        System.out.println("Valitud:" + kodeeri_kaik(vaadeldav_käik));
+                        tekstiväli.setText("Valitud:" + kodeeri_kaik(vaadeldav_käik));
                         try {
                             updateGridPane();
                         } catch (IOException e) {
@@ -118,35 +127,33 @@ public class Peaklass extends Application {
                     }
                 }
                 if (! sisaldub(alguse_leg_käigud, vaadeldav_käik)){
-                    System.out.println("Sinna ei saa selle nupuga käia!");
+                    tekstiväli.setText("Sinna ei saa selle nupuga käia!");
                     return;
                 }
                 laud.liiguta(alguskoht, vaadeldav_käik);
 
-                System.out.println("Liigutasin: " + kodeeri_kaik(alguskoht) + " -> " + kodeeri_kaik(vaadeldav_käik));
+                tekstiväli.setText("Liigutasin: " + kodeeri_kaik(alguskoht) + " -> " + kodeeri_kaik(vaadeldav_käik));
                 alguskoht = null;
                 if (mangu_lopp(laud,valge_kaik)){
                     if(vastasekuningas_tule_all(laud,valge_kaik)) {
-                        System.out.println("mang läbi");
-                        Text text = new Text("Mäng läbi, võitis: " + värv);
-                        text.setFont(Font.font(20));
-                        text.setX(700);
-                        text.setY(250);
-                        juur.getChildren().clear();
-                        juur.getChildren().add(text);
+                        if (värv=='v')tekstiväli.setText("Mäng läbi, võitis: " + mängija1);
+                        else tekstiväli.setText("Mäng läbi, võitis: " + mängija2);
+                        try {
+                            updateGridPane();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         return;
                     }
                     else{
-                        System.out.println("mang läbi");
-                        Text text = new Text("Mäng läbi, viik");
-                        text.setFont(Font.font(20));
-                        text.setX(700);
-                        text.setY(250);
-                        juur.getChildren().clear();
-                        juur.getChildren().add(text);
+                        tekstiväli.setText("Mäng läbi, viik");
+                        try {
+                            updateGridPane();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         return;
                     }
-
                 }
                 try {
                     updateGridPane();
@@ -155,44 +162,30 @@ public class Peaklass extends Application {
                 }
                 valge_kaik = !valge_kaik;
                 värv = (valge_kaik) ? 'v' : 'm';
-                käiguarv++;
                 try {
-                    writeToLog();
                     ettur_jõuab_lõppu();
+                    writeToLog();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                käiguarv++;
             }
         };
     }
 
     public static void updateGridPane() throws IOException {
-        Button button=new Button("Tagasi");
-        button.setLayoutX(620);
-        button.setOnMouseClicked(event -> {
-            try {
-                roll_Back();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
         GridPane pane = new GridPane();
-
         int count = 0;
         double s = 75; // side of rectangle
         for (int i = 1; i < 9; i++) {
             count++;
             for (int j = 1; j < 9; j++) {
                 Rectangle r = new Rectangle(s,s);
-                //r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));
-                //r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
+                //r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
                 if (count % 2 != 0)
                     r.setFill(Color.WHITE);
                 else
                     r.setFill(Color.SADDLEBROWN);
-                //r.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                //buttonEventHandler());
-                //pane.add(r, j, i);
                 StackPane stackPane = new StackPane(r);
 
                 if (laud.getLaud()[7-(i-1)][j-1] != null){
@@ -209,7 +202,6 @@ public class Peaklass extends Application {
                 stackPane.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
                 pane.add(stackPane, j, i);
                 count++;
-
             }
         }
         for (int i = 0; i < 2; i++) {
@@ -226,22 +218,91 @@ public class Peaklass extends Application {
                 pane.add(text,i * 9,j + 1);
             }
         }
-
         pane.setStyle("-fx-border-color: black;");
-
-        juur.getChildren().clear();
-        juur.getChildren().add(pane);
-        juur.getChildren().add(button);
+        if (gridPane != null)
+            juur.getChildren().remove(gridPane);
+        gridPane = pane;
+        juur.getChildren().add(gridPane);
     }
-    public void start(Stage primaryStage) throws IOException {
-        initLog();
-        updateGridPane();
-        Scene scene = new Scene(juur);
+        public void mang_algab(Stage primaryStage)throws IOException{
+            initLog();
+            Button button = new Button("Tagasi");
+            button.setLayoutX(620);
+            button.setOnMouseClicked(event -> {
+                try {
+                    roll_Back();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            tekstiväli = new Text();
+            tekstiväli.setFont(Font.font(20));
+            tekstiväli.setX(700);
+            tekstiväli.setY(250);
+            juur = new Group(button, tekstiväli);
+            updateGridPane();
+
+            Scene scene = new Scene(juur);
+            primaryStage.setTitle("Male");
+            primaryStage.setScene(scene); // Place in scene in the stage
+            primaryStage.show();
+        }
+
+        public void start(Stage primaryStage) throws IOException {
+        GridPane algus=new GridPane();
+        algus.setPrefSize(600,600);
+        algus.setAlignment(Pos.CENTER);
+        Button alusta=new Button("Alusta");
+        alusta.setOnMouseClicked(event -> {
+            primaryStage.close();
+            try {
+                nime_valikud(primaryStage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        GridPane.setHalignment(alusta, HPos.CENTER);
+        GridPane.setValignment(alusta, VPos.CENTER);
+        algus.getChildren().add(alusta);
+        Scene s=new Scene(algus);
         primaryStage.setTitle("Male");
-        primaryStage.setScene(scene); // Place in scene in the stage
+        primaryStage.setScene(s);
+        primaryStage.show();
+    }
+
+    private void nime_valikud(Stage primaryStage)throws IOException {
+        TextField mängija_1=new TextField("Mängija 1");
+        TextField mängija_2=new TextField("Mängija 2");
+        Text valge=new Text("Valge");
+        Text must=new Text("Must");
+        GridPane valikud=new GridPane();
+        valikud.setPrefSize(600,600);
+        valikud.setAlignment(Pos.CENTER);
+        Button alusta=new Button("Alusta mängimist");
+        alusta.setOnMouseClicked(event -> {
+            mängija1=mängija_1.getCharacters().toString();
+            mängija2=mängija_2.getCharacters().toString();
+            primaryStage.close();
+            try {
+                mang_algab(primaryStage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        GridPane.setHalignment(alusta, HPos.CENTER);
+        GridPane.setValignment(alusta, VPos.CENTER);
+        valikud.add(valge,0,0);
+        valikud.add(must,2,0);
+        valikud.add(alusta,1,2);
+        valikud.add(mängija_1,0,1);
+        valikud.add(mängija_2,2,1);
+        Scene s=new Scene(valikud);
+        primaryStage.setTitle("Male");
+        primaryStage.setScene(s);
         primaryStage.show();
 
     }
+
     public static int getKäiguarv() {
         return käiguarv;
     }
@@ -254,6 +315,10 @@ public class Peaklass extends Application {
         alguskoht = null;
         valge_kaik = !valge_kaik;
         värv = (valge_kaik) ? 'v' : 'm';
+        if (!mang_kaib){
+            juur.getChildren().removeAll(eemaldatavad);
+            mang_kaib = true;
+        }
         updateGridPane();
     }
 
@@ -281,42 +346,6 @@ public class Peaklass extends Application {
         try(BufferedWriter välja = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logifail, true), StandardCharsets.UTF_8))){
             välja.write("\n" + käiguarv + laud.kodeerilaud());
         }
-        //String info = laud.kodeerilaud();
-        //new Malelaud(info.substring(info.indexOf(";")+1)).väljasta();
-    }
-
-    public static String pildi_nimi(Nupp n){
-        if (n.getClass() == Ettur.class){
-            if (n.varv == 'v')
-                return "valge_ettur";
-            return "must_ettur";
-        }
-        if (n.getClass() == Vanker.class){
-            if (n.varv == 'v')
-                return "valge_vanker";
-            return "must_vanker";
-        }
-        if (n.getClass() == Ratsu.class){
-            if (n.varv == 'v')
-                return "valge_ratsu";
-            return "must_ratsu";
-        }
-        if (n.getClass() == Oda.class){
-            if (n.varv == 'v')
-                return "valge_oda";
-            return "must_oda";
-        }
-        if (n.getClass() == Kuningas.class){
-            if (n.varv == 'v')
-                return "valge_kunn";
-            return "must_kunn";
-        }
-        if (n.getClass() == Lipp.class){
-            if (n.varv == 'v')
-                return "valge_lipp";
-            return "must_lipp";
-        }
-        throw new IllegalArgumentException("Sellist nuppu ei leitud!");
     }
 
     /**
@@ -340,28 +369,6 @@ public class Peaklass extends Application {
         }
         return legaalsed_kaigud;
     }
-    /*public static ArrayList<int[]> vastasekaigud(Malelaud laud, boolean valge_kaik){
-        ArrayList<int[]> vastus = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (laud.getLaud()[i][j] != null) {
-                    if (valge_kaik) {
-                        if (laud.getLaud()[i][j].getVarv() == 'm') {
-                            ArrayList<int[]> selle_nupu_käigud = laud.getLaud()[i][j].kaigud(laud);
-                            vastus.addAll(selle_nupu_käigud);
-                        }
-                    }
-                    else {
-                        if (laud.getLaud()[i][j].getVarv() == 'v') {
-                            ArrayList<int[]> selle_nupu_käigud = laud.getLaud()[i][j].kaigud(laud);
-                            vastus.addAll(selle_nupu_käigud);
-                        }
-                    }
-                }
-            }
-        }
-        return vastus;
-    }*/
 
     public static boolean legaalne(boolean valge_kaik, Malelaud laud){
         Nupp[][] nupud = laud.getLaud();
@@ -409,7 +416,6 @@ public class Peaklass extends Application {
         }
         int teine = Integer.parseInt(String.valueOf(kaik.charAt(1))) - 1;
         return new int[]{teine, esimene};
-
     }
 
     /**
@@ -437,24 +443,6 @@ public class Peaklass extends Application {
         return false;
     }
 
-    public static boolean valideeri_käigu_formaat(String käik){
-        String käik_lühem = käik.trim();
-        return käik_lühem.length() == 2 && tahestik_char.contains(käik_lühem.charAt(0)) && numbrid_char.contains(käik_lühem.charAt(1));
-    }
-
-    /**
-     *
-     * @return sobiv string nt("a2", aga mitte "2a")
-     *//*
-    public static String valideeri_käik(){
-        String kaik_string = sc.nextLine();
-        while (! valideeri_käigu_formaat(kaik_string)){
-            System.out.println("Käigu formaat ei ole sobilik, proovige uuesti:");
-            kaik_string = sc.nextLine();
-        }
-        return kaik_string;
-    }*/
-
     public static void ettur_jõuab_lõppu() throws IOException {
         int i = -1;
         int j = -1;
@@ -473,117 +461,58 @@ public class Peaklass extends Application {
         if (i == -1)
             return;
 
-        System.out.println("Ettur jõudis lõppu! Valige milleks ettur muutub: 'Lipp', 'Oda', 'Ratsu', 'Vanker'");
-        String muutub;
+        tekstiväli.setText("Ettur jõudis lõppu! Valige milleks ettur muutub: 'Lipp', 'Oda', 'Ratsu', 'Vanker'");
         kuva_valikud(i,j);
-        //laud.ettur_muutub(muutub, (Ettur) laud.getLaud()[i][j]);
-
     }
-    static EventHandler<MouseEvent> ettur_muutub(String nupuks,int i,int j) throws IOException{
+    static EventHandler<MouseEvent> ettur_muutub(String nupuks, int i, int j) {
         return event -> {
             laud.ettur_muutub(nupuks, (Ettur) laud.getLaud()[i][j]);
+            käiguarv--;
             try {
                 updateGridPane();
+                writeToLog();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            juur.getChildren().removeAll(eemaldatavad);
+            mang_kaib = true;
+            käiguarv++;
         };
     }
     private static void kuva_valikud(int rida,int veerg) throws IOException {
-        Button button=new Button("Tagasi");
-        button.setLayoutX(620);
-        Button lipp=new Button("Lipp");
+        mang_kaib = false;
+        eemaldatavad = new ArrayList<>();
+        Button lipp = new Button("Lipp");
         lipp.setLayoutX(620);
         lipp.setLayoutY(30);
-        lipp.setOnMouseClicked(ettur_muutub("Lipp",rida,veerg));
-        Button oda=new Button("Oda");
+        lipp.setOnMouseClicked(ettur_muutub("Lipp", rida, veerg));
+
+        Button oda = new Button("Oda");
         oda.setLayoutX(620);
         oda.setLayoutY(60);
-        oda.setOnMouseClicked(ettur_muutub("Oda",rida,veerg));
-        Button ratsu=new Button("Ratsu");
+        oda.setOnMouseClicked(ettur_muutub("Oda", rida, veerg));
+
+        Button ratsu = new Button("Ratsu");
         ratsu.setLayoutX(620);
         ratsu.setLayoutY(90);
-        ratsu.setOnMouseClicked(ettur_muutub("Ratsu",rida,veerg));
-        Button vanker=new Button("Vanker");
+        ratsu.setOnMouseClicked(ettur_muutub("Ratsu", rida, veerg));
+
+        Button vanker = new Button("Vanker");
         vanker.setLayoutX(620);
         vanker.setLayoutY(120);
-        vanker.setOnMouseClicked(ettur_muutub("Vanker",rida,veerg));
-        GridPane pane = new GridPane();
-        //laud.väljasta();
+        vanker.setOnMouseClicked(ettur_muutub("Vanker", rida, veerg));
 
-        int count = 0;
-        double s = 75; // side of rectangle
-        for (int i = 1; i < 9; i++) {
-            count++;
-            for (int j = 1; j < 9; j++) {
-                Rectangle r = new Rectangle(s,s);
-                //r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));
-                //r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
-                if (count % 2 != 0)
-                    r.setFill(Color.WHITE);
-                else
-                    r.setFill(Color.SADDLEBROWN);
-                //r.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                //buttonEventHandler());
-                //pane.add(r, j, i);
-                StackPane stackPane = new StackPane(r);
+        eemaldatavad.add(lipp);
+        eemaldatavad.add(vanker);
+        eemaldatavad.add(ratsu);
+        eemaldatavad.add(oda);
 
-                if (laud.getLaud()[7-(i-1)][j-1] != null){
-                    String failinimi = "Graafika/" + pildi_nimi(laud.getLaud()[7-(i-1)][j-1]) + ".png";
-                    InputStream sisse = new FileInputStream(failinimi);
-                    Image pilt = new Image(sisse);
-                    ImageView imageView = new ImageView(pilt);
-                    stackPane.getChildren().add(imageView);
-                    //imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
-                    //pane.add(imageView, j, i);
-                }
-                stackPane.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
-                pane.add(stackPane, j, i);
-                count++;
-            }
-        }
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                Text text = new Text(tahestik_char.get(j).toString());
-                GridPane.setHalignment(text, HPos.CENTER);
-                pane.add(text,j+1,i*9);
-            }
-        }
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                Text text = new Text(numbrid_char.get(numbrid_char.size()-1-j).toString());
-                GridPane.setHalignment(text, HPos.CENTER);
-                pane.add(text,i * 9,j + 1);
-            }
-        }
-
-        pane.setStyle("-fx-border-color: black;");
-
-        juur.getChildren().clear();
-        juur.getChildren().add(pane);
-        juur.getChildren().add(button);
         juur.getChildren().add(lipp);
         juur.getChildren().add(oda);
         juur.getChildren().add(vanker);
         juur.getChildren().add(ratsu);
     }
 
-    /*public static void AI_vastu(){ ei tea kas teha
-        ArrayList<Nupp> võimalikud_nupud = new ArrayList<>();
-        for (Nupp[] nupp_mass : laud.getLaud()) {
-            for (Nupp nupp : nupp_mass) {
-                if (nupp != null && nupp.getVarv() == 'm' && legaalsus_filter(nupp.kaigud(laud), nupp.getAsukoht(), laud, valge_kaik).size() != 0)
-                    võimalikud_nupud.add(nupp);
-            }
-        }
-        if (võimalikud_nupud.size() == 0) return;
-        Collections.shuffle(võimalikud_nupud);
-        Nupp suvaline = võimalikud_nupud.get((int)(Math.random() * võimalikud_nupud.size()));
-        ArrayList<int[]> võimalikud_käigud = legaalsus_filter(suvaline.kaigud(laud), suvaline.getAsukoht(), laud, valge_kaik);
-        Collections.shuffle(võimalikud_käigud);
-        int[] suvaline_käik = võimalikud_käigud.get((int)(Math.random() * võimalikud_käigud.size()));
-        laud.liiguta(suvaline.getAsukoht(), suvaline_käik);
-    }*/
     /**
      *
      * @param malelaud ja kes just käis
@@ -758,70 +687,6 @@ public class Peaklass extends Application {
             valge_kaik = !valge_kaik;
             värv = (valge_kaik) ? 'v' : 'm';
             käiguarv++;
-        }**/
-        /*private void naita_kaike() throws IOException {
-        GridPane pane = new GridPane();
-        //laud.väljasta();
-
-        int count = 0;
-        double s = 75; // side of rectangle
-        for (int i = 1; i < 9; i++) {
-            count++;
-            for (int j = 1; j < 9; j++) {
-                Rectangle r = new Rectangle(s,s);
-                //r.widthProperty().bind(pane.widthProperty().subtract(40).divide(8));
-                //r.heightProperty().bind(pane.heightProperty().subtract(40).divide(8));
-                if (count % 2 != 0)
-                    r.setFill(Color.WHITE);
-                else
-                    r.setFill(Color.SADDLEBROWN);
-                //r.addEventHandler(MouseEvent.MOUSE_CLICKED,
-                //buttonEventHandler());
-                //pane.add(r, j, i);
-                StackPane stackPane = new StackPane(r);
-                if (laud.getLaud()[7-(i-1)][j-1] != null){
-                    String failinimi = "Graafika/" + pildi_nimi(laud.getLaud()[7-(i-1)][j-1]) + ".png";
-                    InputStream sisse = new FileInputStream(failinimi);
-                    Image pilt = new Image(sisse);
-                    ImageView imageView = new ImageView(pilt);
-                    stackPane.getChildren().add(imageView);
-                    //imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
-                    //pane.add(imageView, j, i);
-                }
-                if (sisaldub(alguse_leg_käigud, new int[]{7-(i-1),j-1})){
-                    String failinimi = "Graafika/tapp.png";
-                    InputStream sisse = new FileInputStream(failinimi);
-                    Image pilt = new Image(sisse);
-                    ImageView imageView = new ImageView(pilt);
-                    imageView.setFitHeight(10);
-                    imageView.setFitWidth(10);
-                    GridPane.setHalignment(imageView, HPos.CENTER);
-                    stackPane.getChildren().add(imageView);
-                }
-                stackPane.addEventHandler(MouseEvent.MOUSE_CLICKED, buttonEventHandler());
-                pane.add(stackPane, j, i);
-                count++;
-            }
-        }
-
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                Text text = new Text(tahestik_char.get(j).toString());
-                GridPane.setHalignment(text, HPos.CENTER);
-                pane.add(text,j+1,i*9);
-            }
-        }
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                Text text = new Text(numbrid_char.get(numbrid_char.size()-1-j).toString());
-                GridPane.setHalignment(text, HPos.CENTER);
-                pane.add(text,i * 9,j + 1);
-            }
-        }
-
-        pane.setStyle("-fx-border-color: black;");
-        juur.getChildren().removeAll();
-        juur.getChildren().add(pane);
-    }*/
+       */
     }
 }
