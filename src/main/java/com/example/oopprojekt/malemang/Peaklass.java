@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -281,7 +282,11 @@ public class Peaklass extends Application {
         }
 
         public void start(Stage primaryStage) {
-
+        Text algusteks=new Text("Programm laseb sisestada mõlema inimese nime vastava värvi alla, \n" +
+                "seejärel loob malelaua nuppudega. Mängijad liigutavad nuppe hiirega. \n" +
+                "On ka tagasi nupp, mis võtab viimase käigu tagasi.\nVeel on lahku nupp, mis paneb mängu kinni. \n" +
+                "Mängu saab ka kinni panna esc nuppu vajutades oma klaviatuuril.");
+        algusteks.setTextAlignment(TextAlignment.CENTER);
         GridPane algus = new GridPane();
         algus.setPrefSize(600,600);
         algus.setAlignment(Pos.CENTER);
@@ -294,10 +299,11 @@ public class Peaklass extends Application {
                 e.printStackTrace();
             }
         });
-
+        algusteks.setFont(Font.font(20));
         GridPane.setHalignment(alusta, HPos.CENTER);
         GridPane.setValignment(alusta, VPos.CENTER);
-        algus.getChildren().add(alusta);
+        algus.add(alusta,1,1);
+        algus.add(algusteks,1,0);
         Scene s = new Scene(algus);
         primaryStage.setTitle("Male");
         primaryStage.setScene(s);
