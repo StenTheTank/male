@@ -148,6 +148,9 @@ public class Peaklass extends Application {
         };
     }
 
+    /**
+     * Meetod kontrollib kas mäng on läbi ja kui on, siis tekitab nupu, millega saab uut mängu alustada
+     */
     private static void endGame() {
         if (mangu_lopp(laud, valge_kaik)) {
             if (vastasekuningas_tule_all(laud, valge_kaik)) {
@@ -166,22 +169,22 @@ public class Peaklass extends Application {
             uus_mang.setOnMouseClicked(event1 -> {
                 Stage s = (Stage) uus_mang.getScene().getWindow();
                 s.close();
-                try {
-                    laud = new Malelaud();
-                    värv = 'v';
-                    valge_kaik = true;
-                    käiguarv = 1;
-                    mang_kaib = true;
-                    nime_valikud(new Stage());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                laud = new Malelaud();
+                värv = 'v';
+                valge_kaik = true;
+                käiguarv = 1;
+                mang_kaib = true;
+                nime_valikud(new Stage());
             });
             uus_mang.setFont(Font.font(20));
             nupud.getChildren().add(uus_mang);
         }
     }
 
+    /**
+     * Meetod uuendab malelaua
+     * @throws IOException kui vajalike pildifaile ei leita
+     */
     public static void updateGridPane() throws IOException {
         GridPane pane = new GridPane();
         int count = 0;
@@ -231,68 +234,69 @@ public class Peaklass extends Application {
         pane.setMaxSize(630, 630);
         juur.setCenter(pane);
     }
-        public static void mang_algab(Stage primaryStage)throws IOException{
-            initLog();
-            Button tagasi = new Button("Tagasi");
-            tagasi.setFont(Font.font(20));
-            tagasi.setOnMouseClicked(event -> {
-                try {roll_Back();} catch (IOException e) {throw new RuntimeException(e);}
-            });
 
-            Button lahku = new Button("Lahku");
-            lahku.setFont(Font.font(20));
-            lahku.setOnMouseClicked(event -> System.exit(0));
-            lahku.setOnKeyPressed(event -> {
-                if (event.getCode() == KeyCode.ESCAPE)
-                    System.exit(0);
-            });
+    /**
+     * Meetod tekitab uue stseeni, millega saab alustada mängu
+     * @param primaryStage Lava
+     * @throws IOException kui vajalikke pildifaile või logifaili ei leita
+     */
+    public static void mang_algab(Stage primaryStage)throws IOException{
+        initLog();
+        Button tagasi = new Button("Tagasi");
+        tagasi.setFont(Font.font(20));
+        tagasi.setOnMouseClicked(event -> {
+            try {roll_Back();} catch (IOException e) {throw new RuntimeException(e);}
+        });
 
-            tekstiväli = new Text();
-            tekstiväli.setFont(Font.font(20));
-            HBox tekst_abi = new HBox(tekstiväli);
-            tekst_abi.setAlignment(Pos.TOP_LEFT);
-            tekst_abi.setPrefHeight(10000);
-            tekst_abi.setMaxWidth(630);
+        Button lahku = new Button("Lahku");
+        lahku.setFont(Font.font(20));
+        lahku.setOnMouseClicked(event -> System.exit(0));
+        lahku.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE)
+                System.exit(0);
+        });
 
-            nupud = new VBox(lahku, tagasi);
-            nupud.setMaxHeight(500);
-            nupud.setPrefWidth(10000);
-            nupud.setAlignment(Pos.TOP_LEFT);
-            nupud.setTranslateX(10);
-            nupud.setSpacing(5);
+        tekstiväli = new Text();
+        tekstiväli.setFont(Font.font(20));
+        HBox tekst_abi = new HBox(tekstiväli);
+        tekst_abi.setAlignment(Pos.TOP_LEFT);
+        tekst_abi.setPrefHeight(10000);
+        tekst_abi.setMaxWidth(630);
 
-            juur = new BorderPane();
-            juur.setBottom(tekst_abi);
-            juur.setRight(nupud);
-            updateGridPane();
-            juur.setLayoutX(5);
+        nupud = new VBox(lahku, tagasi);
+        nupud.setMaxHeight(500);
+        nupud.setPrefWidth(10000);
+        nupud.setAlignment(Pos.TOP_LEFT);
+        nupud.setTranslateX(10);
+        nupud.setSpacing(5);
 
-            primaryStage.setMinHeight(700);
-            primaryStage.setMinWidth(700);
-            primaryStage.setHeight(725);
-            primaryStage.setWidth(775);
+        juur = new BorderPane();
+        juur.setBottom(tekst_abi);
+        juur.setRight(nupud);
+        updateGridPane();
+        juur.setLayoutX(5);
 
-            updateGridPane();
+        primaryStage.setMinHeight(700);
+        primaryStage.setMinWidth(700);
+        primaryStage.setHeight(725);
+        primaryStage.setWidth(775);
 
-            Scene scene = new Scene(juur);
-            primaryStage.setTitle("Male");
-            primaryStage.setScene(scene); // Place in scene in the stage
-            primaryStage.show();
+        updateGridPane();
+
+        Scene scene = new Scene(juur);
+        primaryStage.setTitle("Male");
+        primaryStage.setScene(scene); // Place in scene in the stage
+        primaryStage.show();
         }
 
-        public void start(Stage primaryStage) {
-
+    public void start(Stage primaryStage) {
         GridPane algus = new GridPane();
         algus.setPrefSize(600,600);
         algus.setAlignment(Pos.CENTER);
         Button alusta = new Button("Alusta");
         alusta.setOnMouseClicked(event -> {
             primaryStage.close();
-            try {
-                nime_valikud(primaryStage);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            nime_valikud(primaryStage);
         });
 
         GridPane.setHalignment(alusta, HPos.CENTER);
@@ -304,15 +308,19 @@ public class Peaklass extends Application {
         primaryStage.show();
     }
 
-    private static void nime_valikud(Stage primaryStage)throws IOException {
+    /**
+     *  Meetod tekitab stseeni, kus saab valida mängijate nimed
+     * @param primaryStage Lava
+     */
+    private static void nime_valikud(Stage primaryStage) {
         TextField mängija_1 = new TextField("Mängija 1");
         TextField mängija_2 = new TextField("Mängija 2");
-        Text valge=new Text("Valge");
-        Text must=new Text("Must");
-        GridPane valikud=new GridPane();
+        Text valge = new Text("Valge");
+        Text must = new Text("Must");
+        GridPane valikud = new GridPane();
         valikud.setPrefSize(600,600);
         valikud.setAlignment(Pos.CENTER);
-        Button alusta=new Button("Alusta mängimist");
+        Button alusta = new Button("Alusta mängimist");
         alusta.setOnMouseClicked(event -> {
             mängija1=mängija_1.getCharacters().toString();
             mängija2=mängija_2.getCharacters().toString();
@@ -340,6 +348,10 @@ public class Peaklass extends Application {
         return käiguarv;
     }
 
+    /**
+     * Võtab ühe käigu tagasi
+     * @throws IOException
+     */
     public static void roll_Back() throws IOException {
         if (käiguarv == 1){
             tekstiväli.setText("Rohkem ei saa käike tagasi võtta");
@@ -357,6 +369,12 @@ public class Peaklass extends Application {
         updateGridPane();
     }
 
+    /**
+     *
+     * @param käike soovitud Malelaua käikud arv
+     * @return Soovitud Malelaud
+     * @throws IOException Kui logifaili ei leita
+     */
     public static Malelaud find_from_log(int käike)throws IOException{
         String vaadeldav_rida = null;
         try(BufferedReader sisse = new BufferedReader(new InputStreamReader(new FileInputStream(logifail), StandardCharsets.UTF_8))){
@@ -372,11 +390,20 @@ public class Peaklass extends Application {
         return new Malelaud(vaadeldav_rida);
     }
 
+    /**
+     * Meetod loob/tühjendab logifaili
+     * @throws IOException
+     */
     public static void initLog() throws IOException {
         try(BufferedWriter välja = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logifail), StandardCharsets.UTF_8))){
             välja.write(0 + laud.kodeerilaud());
         }
     }
+
+    /**
+     * Meetod kirjutab logifaili malelaua info
+     * @throws IOException
+     */
     public static void writeToLog() throws IOException{
         try(BufferedWriter välja = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logifail, true), StandardCharsets.UTF_8))){
             välja.write("\n" + käiguarv + laud.kodeerilaud());
@@ -463,6 +490,10 @@ public class Peaklass extends Application {
         return false;
     }
 
+    /**
+     * Meetod kontrollib kas ettur on jõudnud lõppu ja kui on, siis sooritab vajalikud tegevused
+     * @throws IOException
+     */
     public static void ettur_jõuab_lõppu() throws IOException {
         int i = -1;
         int j = -1;
@@ -484,6 +515,14 @@ public class Peaklass extends Application {
         tekstiväli.setText("Ettur jõudis lõppu! Valige milleks ettur muutub: 'Lipp', 'Oda', 'Vanker', 'Ratsu'");
         kuva_valikud(i,j);
     }
+
+    /**
+     *
+     * @param nupuks Etturi sihtnupp
+     * @param i etturi x-koordinaat
+     * @param j etturi y-koordinaat
+     * @return EventHandler
+     */
     static EventHandler<MouseEvent> ettur_muutub(String nupuks, int i, int j) {
         return event -> {
             laud.ettur_muutub(nupuks, (Ettur) laud.getLaud()[i][j]);
@@ -502,6 +541,12 @@ public class Peaklass extends Application {
             valge_kaik = !valge_kaik;
         };
     }
+
+    /**
+     * Meetod kuvab nupud, millele vajutades ettur muutub vastavaks malendiks
+     * @param rida rida
+     * @param veerg veerg
+     */
     private static void kuva_valikud(int rida,int veerg) {
         mang_kaib = false;
         eemaldatavad = new ArrayList<>();
