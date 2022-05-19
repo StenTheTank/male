@@ -5,10 +5,12 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -46,6 +48,8 @@ public class Peaklass extends Application {
     private static ArrayList<Node> eemaldatavad;
     private static Text tekstiväli;
     private static VBox nupud;
+    private static String mängija1;
+    private static String mängija2;
 
     static {
         try {
@@ -135,11 +139,22 @@ public class Peaklass extends Application {
                 alguskoht = null;
                 if (mangu_lopp(laud,valge_kaik)){
                     if(vastasekuningas_tule_all(laud,valge_kaik)) {
-                        tekstiväli.setText("Mäng läbi, võitis: " + värv);
+                        if (värv=='v')tekstiväli.setText("Mäng läbi, võitis: " + mängija1);
+                        else tekstiväli.setText("Mäng läbi, võitis: " + mängija2);
+                        try {
+                            updateGridPane();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         return;
                     }
                     else{
                         tekstiväli.setText("Mäng läbi, viik");
+                        try {
+                            updateGridPane();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         return;
                     }
                 }
@@ -213,17 +228,52 @@ public class Peaklass extends Application {
         gridPane = pane;
         juur.setCenter(gridPane);
     }
+/*<<<<<<< Alexis
     public void start(Stage primaryStage) throws IOException {
         initLog();
         Button tagasi = new Button("Tagasi");
         tagasi.setFont(Font.font(20));
         tagasi.setOnMouseClicked(event -> {
+=======*/
+        public void mang_algab(Stage primaryStage)throws IOException{
+            initLog();
+            Button button = new Button("Tagasi");
+            button.setLayoutX(620);
+            button.setOnMouseClicked(event -> {
+                try {
+                    roll_Back();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            tekstiväli = new Text();
+            tekstiväli.setFont(Font.font(20));
+            tekstiväli.setX(700);
+            tekstiväli.setY(250);
+            juur = new Group(button, tekstiväli);
+            updateGridPane();
+
+            Scene scene = new Scene(juur);
+            primaryStage.setTitle("Male");
+            primaryStage.setScene(scene); // Place in scene in the stage
+            primaryStage.show();
+        }
+
+        public void start(Stage primaryStage) throws IOException {
+        GridPane algus=new GridPane();
+        algus.setPrefSize(600,600);
+        algus.setAlignment(Pos.CENTER);
+        Button alusta=new Button("Alusta");
+        alusta.setOnMouseClicked(event -> {
+            primaryStage.close();
+//>>>>>>> main
             try {
-                roll_Back();
+                nime_valikud(primaryStage);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         });
+/*<<<<<<< Alexis
         Button lahku = new Button("Lahku");
         lahku.setFont(Font.font(20));
         lahku.setOnMouseClicked(event -> System.exit(0));
@@ -258,13 +308,50 @@ public class Peaklass extends Application {
         primaryStage.setMinWidth(700);
         primaryStage.setHeight(725);
         primaryStage.setWidth(775);
-
-        Scene scene = new Scene(juur);
+=======*/
+        GridPane.setHalignment(alusta, HPos.CENTER);
+        GridPane.setValignment(alusta, VPos.CENTER);
+        algus.getChildren().add(alusta);
+        Scene s=new Scene(algus);
         primaryStage.setTitle("Male");
-        primaryStage.setScene(scene); // Place in scene in the stage
+        primaryStage.setScene(s);
+        primaryStage.show();
+    }
+//>>>>>>> main
+
+    private void nime_valikud(Stage primaryStage)throws IOException {
+        TextField mängija_1=new TextField("Mängija 1");
+        TextField mängija_2=new TextField("Mängija 2");
+        Text valge=new Text("Valge");
+        Text must=new Text("Must");
+        GridPane valikud=new GridPane();
+        valikud.setPrefSize(600,600);
+        valikud.setAlignment(Pos.CENTER);
+        Button alusta=new Button("Alusta mängimist");
+        alusta.setOnMouseClicked(event -> {
+            mängija1=mängija_1.getCharacters().toString();
+            mängija2=mängija_2.getCharacters().toString();
+            primaryStage.close();
+            try {
+                mang_algab(primaryStage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        GridPane.setHalignment(alusta, HPos.CENTER);
+        GridPane.setValignment(alusta, VPos.CENTER);
+        valikud.add(valge,0,0);
+        valikud.add(must,2,0);
+        valikud.add(alusta,1,2);
+        valikud.add(mängija_1,0,1);
+        valikud.add(mängija_2,2,1);
+        Scene s=new Scene(valikud);
+        primaryStage.setTitle("Male");
+        primaryStage.setScene(s);
         primaryStage.show();
 
     }
+
     public static int getKäiguarv() {
         return käiguarv;
     }
