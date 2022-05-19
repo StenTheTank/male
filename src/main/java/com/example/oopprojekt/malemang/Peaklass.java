@@ -223,34 +223,54 @@ public class Peaklass extends Application {
         }
         pane.setStyle("-fx-border-color: black;-fx-padding: 5, 0, 0, 0;");
         pane.setMaxSize(630, 630);
-        //if (gridPane != null)
-            //juur.getChildren().remove(gridPane);
         gridPane = pane;
         juur.setCenter(gridPane);
     }
-/*<<<<<<< Alexis
-    public void start(Stage primaryStage) throws IOException {
-        initLog();
-        Button tagasi = new Button("Tagasi");
-        tagasi.setFont(Font.font(20));
-        tagasi.setOnMouseClicked(event -> {
-=======*/
         public void mang_algab(Stage primaryStage)throws IOException{
             initLog();
-            Button button = new Button("Tagasi");
-            button.setLayoutX(620);
-            button.setOnMouseClicked(event -> {
+            Button tagasi = new Button("Tagasi");
+            tagasi.setFont(Font.font(20));
+            tagasi.setOnMouseClicked(event -> {
                 try {
                     roll_Back();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             });
+
+            Button lahku = new Button("Lahku");
+            lahku.setFont(Font.font(20));
+            lahku.setOnMouseClicked(event -> System.exit(0));
+            lahku.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ESCAPE)
+                    System.exit(0);
+            });
+
             tekstiväli = new Text();
             tekstiväli.setFont(Font.font(20));
-            tekstiväli.setX(700);
-            tekstiväli.setY(250);
-            juur = new Group(button, tekstiväli);
+            HBox tekst_abi = new HBox(tekstiväli);
+            tekst_abi.setAlignment(Pos.TOP_LEFT);
+            tekst_abi.setPrefHeight(10000);
+            tekst_abi.setMaxWidth(630);
+
+            nupud = new VBox(lahku, tagasi);
+            nupud.setMaxHeight(500);
+            nupud.setPrefWidth(10000);
+            nupud.setAlignment(Pos.TOP_LEFT);
+            nupud.setTranslateX(10);
+            nupud.setSpacing(5);
+
+            juur = new BorderPane();
+            juur.setBottom(tekst_abi);
+            juur.setRight(nupud);
+            updateGridPane();
+            juur.setLayoutX(5);
+
+            primaryStage.setMinHeight(700);
+            primaryStage.setMinWidth(700);
+            primaryStage.setHeight(725);
+            primaryStage.setWidth(775);
+
             updateGridPane();
 
             Scene scene = new Scene(juur);
@@ -260,64 +280,27 @@ public class Peaklass extends Application {
         }
 
         public void start(Stage primaryStage) throws IOException {
-        GridPane algus=new GridPane();
+        GridPane algus = new GridPane();
         algus.setPrefSize(600,600);
         algus.setAlignment(Pos.CENTER);
-        Button alusta=new Button("Alusta");
+        Button alusta = new Button("Alusta");
         alusta.setOnMouseClicked(event -> {
             primaryStage.close();
-//>>>>>>> main
             try {
                 nime_valikud(primaryStage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-/*<<<<<<< Alexis
-        Button lahku = new Button("Lahku");
-        lahku.setFont(Font.font(20));
-        lahku.setOnMouseClicked(event -> System.exit(0));
-        lahku.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ESCAPE)
-                System.exit(0);
-        });
 
-        tekstiväli = new Text();
-        tekstiväli.setFont(Font.font(20));
-        HBox tekst_abi = new HBox(tekstiväli);
-        tekst_abi.setAlignment(Pos.TOP_LEFT);
-        tekst_abi.setPrefHeight(10000);
-        tekst_abi.setMaxWidth(630);
-
-        nupud = new VBox(lahku, tagasi);
-        nupud.setMaxHeight(500);
-        nupud.setPrefWidth(10000);
-        nupud.setAlignment(Pos.TOP_LEFT);
-        nupud.setTranslateX(10);
-        nupud.setSpacing(5);
-
-        juur = new BorderPane();
-        juur.setBottom(tekst_abi);
-        BorderPane.setAlignment(tekst_abi, Pos.TOP_LEFT);
-        juur.setRight(nupud);
-        updateGridPane();
-        juur.setLayoutX(5);
-        //nupud.setStyle("-fx-background-color: yellow;");
-
-        primaryStage.setMinHeight(700);
-        primaryStage.setMinWidth(700);
-        primaryStage.setHeight(725);
-        primaryStage.setWidth(775);
-=======*/
         GridPane.setHalignment(alusta, HPos.CENTER);
         GridPane.setValignment(alusta, VPos.CENTER);
         algus.getChildren().add(alusta);
-        Scene s=new Scene(algus);
+        Scene s = new Scene(algus);
         primaryStage.setTitle("Male");
         primaryStage.setScene(s);
         primaryStage.show();
     }
-//>>>>>>> main
 
     private void nime_valikud(Stage primaryStage)throws IOException {
         TextField mängija_1=new TextField("Mängija 1");
