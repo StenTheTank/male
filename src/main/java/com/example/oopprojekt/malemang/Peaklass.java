@@ -6,7 +6,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,11 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -43,7 +40,6 @@ public class Peaklass extends Application {
     private static ArrayList<int[]> alguse_leg_käigud;
     private static final String logifail = "male.log";
     private static final HashMap<String, Image> images;
-    private static GridPane gridPane;
     private static BorderPane juur;
     private static ArrayList<Node> eemaldatavad;
     private static Text tekstiväli;
@@ -90,8 +86,8 @@ public class Peaklass extends Application {
             int rida = GridPane.getRowIndex(node);
             int veerg = GridPane.getColumnIndex(node);
             int[] vaadeldav_käik = new int[]{7 - (rida - 1), veerg - 1};
+            Nupp vaadeldav_nupp = laud.getLaud()[vaadeldav_käik[0]][vaadeldav_käik[1]];
             if (alguskoht == null){
-                Nupp vaadeldav_nupp = laud.getLaud()[vaadeldav_käik[0]][vaadeldav_käik[1]];
                 if (vaadeldav_nupp == null){
                     tekstiväli.setText("Sellel kohal pole nuppu!");
                     return;
@@ -114,7 +110,6 @@ public class Peaklass extends Application {
                     e.printStackTrace();
                 }
             }else{
-                Nupp vaadeldav_nupp = laud.getLaud()[vaadeldav_käik[0]][vaadeldav_käik[1]];
                 if (vaadeldav_nupp != null) {
                     ArrayList<int[]> legaalsed_kaigud = legaalsus_filter(vaadeldav_nupp.kaigud(laud), vaadeldav_käik, laud, valge_kaik);
                     if (vaadeldav_nupp.varv == värv) {
@@ -140,13 +135,14 @@ public class Peaklass extends Application {
                 if (mangu_lopp(laud,valge_kaik)){
                     if(vastasekuningas_tule_all(laud,valge_kaik)) {
                         if (värv=='v')tekstiväli.setText("Mäng läbi, võitis: " + mängija1);
-                        else tekstiväli.setText("Mäng läbi, võitis: " + mängija2);
+                        else {
+                            tekstiväli.setText("Mäng läbi, võitis: " + mängija2);
+                        }
                         try {
                             updateGridPane();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        return;
                     }
                     else{
                         tekstiväli.setText("Mäng läbi, viik");
@@ -155,8 +151,25 @@ public class Peaklass extends Application {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        return;
                     }
+                    mang_kaib=false;
+                    Button uus_mang=new Button("Uus mäng");
+                    uus_mang.setOnMouseClicked(event1 -> {
+                        Stage s=(Stage) uus_mang.getScene().getWindow();
+                        s.close();
+                        try {
+                            laud=new Malelaud();
+                            värv='v';
+                            valge_kaik=true;
+                            käiguarv=1;
+                            nime_valikud(new Stage());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    uus_mang.setFont(Font.font(20));
+                    nupud.getChildren().add(uus_mang);
+                    return;
                 }
                 try {
                     updateGridPane();
@@ -223,10 +236,9 @@ public class Peaklass extends Application {
         }
         pane.setStyle("-fx-border-color: black;-fx-padding: 5, 0, 0, 0;");
         pane.setMaxSize(630, 630);
-        gridPane = pane;
-        juur.setCenter(gridPane);
+        juur.setCenter(pane);
     }
-    public void mang_algab(Stage primaryStage)throws IOException{
+    public static void mang_algab(Stage primaryStage)throws IOException{
         initLog();
         Button tagasi = new Button("Tagasi");
         tagasi.setFont(Font.font(20));
@@ -279,7 +291,7 @@ public class Peaklass extends Application {
         primaryStage.show();
     }
 
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) {
         GridPane algus = new GridPane();
         algus.setPrefSize(600,600);
         algus.setAlignment(Pos.CENTER);
@@ -302,7 +314,7 @@ public class Peaklass extends Application {
         primaryStage.show();
     }
 
-    private void nime_valikud(Stage primaryStage)throws IOException {
+    private static void nime_valikud(Stage primaryStage)throws IOException {
         TextField mängija_1=new TextField("Mängija 1");
         TextField mängija_2=new TextField("Mängija 2");
         Text valge=new Text("Valge");
@@ -435,21 +447,6 @@ public class Peaklass extends Application {
             }
         }
         return true;
-    }
-
-    /**
-     *
-     * @param kaik string
-     * @return liigutava nupu koordinaadid või sihtkoordinaadid
-     */
-    public static int[] dekodeeri_kaik(String kaik){
-        String[] tahestik = {"a","b","c","d","e","f","g","h"};
-        int esimene = 0;
-        for (int i = 0; i < tahestik.length; i++) {
-            if (kaik.startsWith(tahestik[i])) esimene = i;
-        }
-        int teine = Integer.parseInt(String.valueOf(kaik.charAt(1))) - 1;
-        return new int[]{teine, esimene};
     }
 
     /**
