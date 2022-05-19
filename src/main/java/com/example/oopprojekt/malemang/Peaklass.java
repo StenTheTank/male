@@ -158,7 +158,6 @@ public class Peaklass extends Application {
                 käiguarv++;
                 try {
                     writeToLog();
-                    System.out.println("Logisse!");
                     ettur_jõuab_lõppu();
                 } catch (IOException e) {
                     e.printStackTrace();
